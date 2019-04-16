@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Environment">
+      <UniqueIdentifier>{f8ffb082-ba43-4104-9070-c19d6d67c906}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meta">
+      <UniqueIdentifier>{b6764f48-b059-4c2e-8e7f-af85b661fdc5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="../Pubc/Entry.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="../Pubc/Version.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Pubc\Environment.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="../Pubc/Version.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="../Pubc/Register.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Pubc\Environment.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Meta\licence_name.txt">
+      <Filter>Meta</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../Meta/libraries.json">
+      <Filter>Meta</Filter>
+    </None>
+    <None Include="../Meta/contributors.json">
+      <Filter>Meta</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\Meta\generate_meta.txt">
+      <Filter>Meta</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
