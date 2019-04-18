@@ -12,7 +12,6 @@
 #include "BlackRoot/Pubc/Threaded IO Stream.h"
 
 #include "ToolboxBase/Pubc/Entry.h"
-#include "ToolboxBase/Pubc/Base Messages.h"
 #include "ToolboxBase/Pubc/Environment Bootstrap.h"
 
 #include "IrisBase/Pubc/Version.h"
@@ -28,27 +27,29 @@
 #include <array>
 #include <complex>
 
-int irisMain(Toolbox::Util::EnvironmentBootstrap &bootstrap)
+int Iris_Main(Toolbox::Util::EnvironmentBootstrap &bootstrap)
 {
     using cout = BlackRoot::Util::Cout;
     
+        // Introduce ourselves
     cout{} << BlackRoot::Repo::VersionRegistry::GetBootString() << std::endl << std::endl;
 
+        // Create an environment and start its thread
 	IrisBack::Core::Environment * environment = new IrisBack::Core::Environment();
-	Toolbox::Core::SetEnvironment(environment);
-	std::thread t1([&](){
-        environment->Run();
+	Toolbox::Core::Set_Environment(environment);
+	std::thread t1([=]{
+        environment->run_with_current_thread();
     });
     
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    bootstrap.SetupEnvironment(environment);
+    bootstrap.setup_environment(environment);
 
-    if (!bootstrap.ExecuteFromBootFile()) {
+    if (!bootstrap.execute_from_boot_file()) {
         cout{} << "Default start-up" << std::endl;
 
-        if (!bootstrap.ExecuteFromJSON( R"(
-                { "serious" : [{ "env" : [ "createSocketMan" ] }
+        if (!bootstrap.execute_from_json( R"(
+                { "serious" : [ { "env / create_socketman" : {} }
                               ]
                 } )"_json ))
         {
@@ -59,12 +60,10 @@ int irisMain(Toolbox::Util::EnvironmentBootstrap &bootstrap)
 
 End:
     t1.join();
-    
-    environment->UnloadAll();
 
     delete environment;
 
     return 0;
 }
 
-TB_STARTFUNC_DEF(irisMain);
+TB_STARTFUNC_DEF(Iris_Main);

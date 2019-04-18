@@ -8,25 +8,23 @@
 
 namespace IrisBack {
 namespace Core {
-
+    
 	class Environment : public Toolbox::Base::BaseEnvironment {
-        TB_MESSAGES_DECLARE_RECEIVER(Environment, Toolbox::Base::BaseEnvironment);
+        CON_RMR_DECLARE_CLASS(Environment, Toolbox::Base::BaseEnvironment);
 
     protected:
-
-    public:
-        void InternalSetupRelayMap() override;
-        
-        void InternalMessageRelayToWeb(std::string, Toolbox::Messaging::IAsynchMessage*);
-        void InternalMessageSendToWeb(std::string, Toolbox::Messaging::IAsynchMessage*);
-        
     public:
         Environment();
         ~Environment() override;
         
-        void UnloadAll() override;
+            // Control
         
-        void InternalCompileStats(BlackRoot::Format::JSON &) override;
+        void create_pipeline();
+        void internal_unload_all() override;
+
+            // Util
+
+        void internal_compile_stats(JSON &) override;
 	};
 
 }

@@ -2,16 +2,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+#include "BlackRoot/Pubc/Assert.h"
+
 #include "IrisBase/Pubc/Environment.h"
 
 using namespace IrisBack::Core;
 
-TB_MESSAGES_BEGIN_DEFINE(Environment);
+    //  Relay message receiver
+    // --------------------
 
-TB_MESSAGES_ENUM_BEGIN_MEMBER_FUNCTIONS(Environment);
-TB_MESSAGES_ENUM_END_MEMBER_FUNCTIONS(Environment);
+CON_RMR_DEFINE_CLASS(Environment);
 
-TB_MESSAGES_END_DEFINE(Environment);
+    //  Setup
+    // --------------------
 
 Environment::Environment()
 {
@@ -21,39 +24,18 @@ Environment::~Environment()
 {
 }
 
-void Environment::UnloadAll()
+    //  Control
+    // --------------------
+
+void Environment::internal_unload_all()
 {
-    this->MessengerBaseClass::UnloadAll();
+    this->RelayReceiverBaseClass::internal_unload_all();
 }
 
-void Environment::InternalSetupRelayMap()
+    //  Util
+    // --------------------
+
+void Environment::internal_compile_stats(JSON & json)
 {
-    this->BaseEnvironment::InternalSetupRelayMap();
-    
-    this->MessageRelay.Emplace("web", this, &Environment::InternalMessageSendToWeb, this, &Environment::InternalMessageSendToWeb);
-}
-
-void Environment::InternalCompileStats(BlackRoot::Format::JSON & json)
-{
-    this->MessengerBaseClass::InternalCompileStats(json);
-}
-
-void Environment::InternalMessageSendToWeb(std::string, Toolbox::Messaging::IAsynchMessage *msg)
-{
-	std::stringstream ss;
-
-	ss << "<!doctype html>" << std::endl
-		<< "<html>" << std::endl
-		<< " <head>" << std::endl
-		<< "  <title>The Internet</title>" << std::endl
-		<< " </head>" << std::endl
-		<< " <body>" << std::endl
-		<< "  <h1>Welcome</h1>" << std::endl
-		<< "  <p>To the internet.</p>" << std::endl
-		<< " </body>" << std::endl
-		<< "</html>";
-
-    msg->Response = { { "http", ss.str() } };
-    msg->SetOK();
-    msg->Close();
+    this->RelayReceiverBaseClass::internal_compile_stats(json);
 }
