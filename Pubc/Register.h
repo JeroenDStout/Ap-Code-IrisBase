@@ -8,3 +8,4 @@
 
 #include "BlackRoot/Pubc/Register.h"
 #include "ToolboxBase/Pubc/Register.h"
+#include "Conduits/Pubc/Register.h"
