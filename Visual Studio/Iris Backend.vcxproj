@@ -164,6 +164,7 @@
     <ClInclude Include="../Pubc/Version.h" />
     <ClInclude Include="../Pubc/Register.h" />
     <ClInclude Include="..\Pubc\Environment.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Meta\licence_name.txt" />
@@ -181,6 +182,12 @@
   <ItemGroup>
     <None Include="../Meta/contributors.json" />
     <None Include="../Meta/libraries.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Iris Backend.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
