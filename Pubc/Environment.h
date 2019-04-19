@@ -13,6 +13,8 @@ namespace Core {
         CON_RMR_DECLARE_CLASS(Environment, Toolbox::Base::BaseEnvironment);
 
     protected:
+        std::string internal_get_favicon_name() override { return "iris_favicon.ico"; }
+
     public:
         Environment();
         ~Environment() override;
