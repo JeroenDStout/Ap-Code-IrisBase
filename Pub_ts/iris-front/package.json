@@ -1,12 +1,16 @@
 {
   "name": "iris-front",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
-  "homepage" : "/web/",
+  "homepage": "/web/",
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts-ts": "3.1.0"
+    "react-scripts-ts": "3.1.0",
+    "enhanced-resolve": "4.1.0",
+    "babel-runtime": "6.26.0",
+    "tslint": "5.16.0",
+    "tslib": "1.9.3"
   },
   "scripts": {
     "start": "react-scripts-ts start",
