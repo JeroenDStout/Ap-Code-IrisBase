@@ -2,7 +2,7 @@
   "name": "iris-front",
   "version": "0.0.1",
   "private": true,
-  "homepage": "/web/",
+  "homepage": "/web/iris/",
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
