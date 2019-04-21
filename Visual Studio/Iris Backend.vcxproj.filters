@@ -11,6 +11,9 @@
     <Filter Include="Meta">
       <UniqueIdentifier>{b6764f48-b059-4c2e-8e7f-af85b661fdc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Iris">
+      <UniqueIdentifier>{4eedfc4d-06c6-4619-9b55-7631e04fd685}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="../Pubc/Entry.cpp">
@@ -20,6 +23,12 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\Pubc\Environment.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Pubc\Interface Layouts.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Pubc\Base Layouts.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,6 +44,12 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Pubc\Interface Layouts.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Pubc\Base Layouts.h">
+      <Filter>Environment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

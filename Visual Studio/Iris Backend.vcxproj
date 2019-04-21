@@ -158,11 +158,15 @@
     <ClCompile Include="../Pubc/Entry.cpp" />
     <ClCompile Include="../Pubc/Version.cpp" />
     <ClCompile Include="..\Pubc\Environment.cpp" />
+    <ClCompile Include="..\Pubc\Base Layouts.cpp" />
+    <ClCompile Include="..\Pubc\Interface Layouts.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="../Pubc/Version.h" />
     <ClInclude Include="../Pubc/Register.h" />
     <ClInclude Include="..\Pubc\Environment.h" />
+    <ClInclude Include="..\Pubc\Base Layouts.h" />
+    <ClInclude Include="..\Pubc\Interface Layouts.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
