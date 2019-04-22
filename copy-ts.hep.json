@@ -1,13 +1,18 @@
 {
   "vars" : [
     { "widget-dir" : "{cur-dir}/../IrisWidget/" },
-    { "src-dir" : "{cur-dir}/Pub_ts/iris-front/src/" }
+    { "conduits-dir" : "{cur-dir}/../Conduits/pub_ts/" },
+    { "ex-dir" : "{cur-dir}/Pub_ts/iris-front/src/-ex-ts" }
   ],
   "pipes" : [
     { "tool" : "smartcopy",
       "paths" : [
         { "in"  : "{widget-dir}/Pub_ts/shared/*~file~",
-          "out" : "{src-dir}/-ex-widget/{file}" }
+          "out" : "{ex-dir}/{file}" }
+      ],
+      "paths" : [
+        { "in"  : "{conduits-dir}/Websocket Protocol.ts",
+          "out" : "{ex-dir}/Websocket Protocol.ts" }
       ]
     }
   ]
