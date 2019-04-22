@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "homepage": "/web/iris/",
+  "proxy": "http://localhost:3002",
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -10,7 +11,8 @@
     "enhanced-resolve": "4.1.0",
     "babel-runtime": "6.26.0",
     "tslint": "5.16.0",
-    "tslib": "1.9.3"
+    "tslib": "1.9.3",
+    "fbemitter": "2.1.1"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -23,6 +25,7 @@
     "@types/node": "^11.13.5",
     "@types/react": "^16.8.13",
     "@types/react-dom": "^16.8.4",
+    "@types/fbemitter": "2.0.32",
     "typescript": "^3.4.4"
   }
 }

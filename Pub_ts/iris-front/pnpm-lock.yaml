@@ -1,16 +1,20 @@
 dependencies:
   babel-runtime: 6.26.0
   enhanced-resolve: 4.1.0
+  fbemitter: 2.1.1
   react: 16.8.6
   react-dom: 16.8.6
   react-scripts-ts: 3.1.0
   tslib: 1.9.3
   tslint: 5.16.0
+  ws: 6.2.1
 devDependencies:
+  '@types/fbemitter': 2.0.32
   '@types/jest': 24.0.11
   '@types/node': 11.13.6
   '@types/react': 16.8.14
   '@types/react-dom': 16.8.4
+  '@types/ws': 6.0.1
   typescript: 3.4.4
 lockfileVersion: 5
 packages:
@@ -28,6 +32,14 @@ packages:
     dev: false
     resolution:
       integrity: sha512-UFMC4ZeFC48Tpvj7C8UgLvtkaUuovQX+5xNWrsIoMG8o2z+XFKjKaN9iVmS84dPwVN00W4wPmqvYoZF3EGAsfw==
+  /@types/events/3.0.0:
+    dev: true
+    resolution:
+      integrity: sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==
+  /@types/fbemitter/2.0.32:
+    dev: true
+    resolution:
+      integrity: sha1-jtIE2g9U6cjq7DGx7skeJRMtCCw=
   /@types/jest-diff/20.0.1:
     dev: true
     resolution:
@@ -63,6 +75,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-26tFVJ1omGmzIdFTFmnC5zhz1GTaqCjxgUxV4KzWvsybF42P7/j4RBn6UeO3KbHPXqKWZszMXMoI65xIWm954A==
+  /@types/ws/6.0.1:
+    dependencies:
+      '@types/events': 3.0.0
+      '@types/node': 11.13.6
+    dev: true
+    resolution:
+      integrity: sha512-EzH8k1gyZ4xih/MaZTXwT2xOkPiIMSrhQ9b8wrlX88L0T02eYsddatQlwVFlEPyEqV0ChpdpNnE51QPH6NVT4Q==
   /abab/1.0.4:
     dev: false
     resolution:
@@ -1863,6 +1882,11 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
+  /core-js/1.2.7:
+    deprecated: 'core-js@<2.6.5 is no longer maintained. Please, upgrade to core-js@3 or at least to actual version of core-js@2.'
+    dev: false
+    resolution:
+      integrity: sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
   /core-js/2.6.5:
     dev: false
     resolution:
@@ -2448,6 +2472,12 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
+  /encoding/0.1.12:
+    dependencies:
+      iconv-lite: 0.4.24
+    dev: false
+    resolution:
+      integrity: sha1-U4tm8+5izRq1HsMjgp0flIDHS+s=
   /end-of-stream/1.4.1:
     dependencies:
       once: 1.4.0
@@ -2920,6 +2950,24 @@ packages:
     dev: false
     resolution:
       integrity: sha1-VOmr99+i8mzZsWNsWIwa/AXeXVg=
+  /fbemitter/2.1.1:
+    dependencies:
+      fbjs: 0.8.17
+    dev: false
+    resolution:
+      integrity: sha1-Uj4U/a9SSIBbsC9i78M75wP1GGU=
+  /fbjs/0.8.17:
+    dependencies:
+      core-js: 1.2.7
+      isomorphic-fetch: 2.2.1
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      promise: 7.3.1
+      setimmediate: 1.0.5
+      ua-parser-js: 0.7.19
+    dev: false
+    resolution:
+      integrity: sha1-xNWY6taUkRJlPWWIsBpc3Nn5D90=
   /figures/2.0.0:
     dependencies:
       escape-string-regexp: 1.0.5
@@ -4147,6 +4195,13 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
+  /isomorphic-fetch/2.2.1:
+    dependencies:
+      node-fetch: 1.7.3
+      whatwg-fetch: 3.0.0
+    dev: false
+    resolution:
+      integrity: sha1-YRrhrPFPXoH3KVB0coGf6XM1WKk=
   /isstream/0.1.2:
     dev: false
     resolution:
@@ -5297,6 +5352,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-rmTZ9kz+f3rCvK2TD1Ue/oZlns7OGoIWP4fc3llxxRXlOkHKoWPPWJOfFYpITabSow43QJbRIoHQXtt10VldyQ==
+  /node-fetch/1.7.3:
+    dependencies:
+      encoding: 0.1.12
+      is-stream: 1.1.0
+    dev: false
+    resolution:
+      integrity: sha512-NhZ4CsKx7cYm2vSrBAr2PvFOe6sWDf0UYLRqA6svUYg7+/TSfVAu49jYC4BvQ4Sms9SZgdqGBgroqfDhJdTyKQ==
   /node-forge/0.7.5:
     dev: false
     resolution:
@@ -6193,6 +6255,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=
+  /promise/7.3.1:
+    dependencies:
+      asap: 2.0.6
+    dev: false
+    resolution:
+      integrity: sha512-nolQXZ/4L+bP/UGlkfaIujX9BKxGwmQ9OT4mOt5yvy8iK1h3wqTEJCijzGANTCCl9nWjY41juyAn2K3Q1hLLTg==
   /promise/8.0.1:
     dependencies:
       asap: 2.0.6
@@ -7831,6 +7899,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-xt5RsIRCEaf6+j9AyOBgvVuAec0i92rgCaS3S+UVf5Z/vF2Hvtsw08wtUTJqp4djwznoAgjSxeCcU4r+CcDBJA==
+  /ua-parser-js/0.7.19:
+    dev: false
+    resolution:
+      integrity: sha512-T3PVJ6uz8i0HzPxOF9SWzWAlfN/DavlpQqepn22xgve/5QecC+XMCAtmUNnY7C9StehaV6exjUCI801lOI7QlQ==
   /uglify-es/3.3.9:
     dependencies:
       commander: 2.13.0
@@ -8290,6 +8362,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-nITsLc9oGH/wC8ZOEnS0QhduHIQ=
+  /whatwg-fetch/3.0.0:
+    dev: false
+    resolution:
+      integrity: sha512-9GSJUgz1D4MfyKU7KRqwOjXCXTqWdFNvEr7eUBYchQiVc744mqK/MzXPNR2WsPkmkOa4ywfg8C2n8h+13Bey1Q==
   /whatwg-mimetype/2.3.0:
     dev: false
     resolution:
@@ -8401,6 +8477,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==
+  /ws/6.2.1:
+    dependencies:
+      async-limiter: 1.0.0
+    dev: false
+    resolution:
+      integrity: sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
   /xdg-basedir/3.0.0:
     dev: false
     engines:
@@ -8538,15 +8620,19 @@ packages:
     resolution:
       integrity: sha1-YpmpBVsc78lp/355wdkY3Osiw2A=
 specifiers:
+  '@types/fbemitter': 2.0.32
   '@types/jest': ^24.0.11
   '@types/node': ^11.13.5
   '@types/react': ^16.8.13
   '@types/react-dom': ^16.8.4
+  '@types/ws': 6.0.1
   babel-runtime: 6.26.0
   enhanced-resolve: 4.1.0
+  fbemitter: 2.1.1
   react: ^16.8.6
   react-dom: ^16.8.6
   react-scripts-ts: 3.1.0
   tslib: 1.9.3
   tslint: 5.16.0
   typescript: ^3.4.4
+  ws: 6.2.1
