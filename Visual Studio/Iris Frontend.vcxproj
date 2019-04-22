@@ -135,14 +135,14 @@ npm run build</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-*\**">
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-res\raw_logo.png">
       <FileType>Document</FileType>
-      <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+      <Command>cd "D:\Work\Software\Apeiron\Projects\Testing\Iris-Dev\Code\IrisBase\Visual Studio\..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
-      <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <Outputs>D:\Work\Software\Apeiron\Projects\Testing\Iris-Dev\Code\IrisBase\Visual Studio\..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
-      <Message>Booping %(Identity)</Message>
+      <Message>Booping ..\Pub_ts\iris-front\src\-ex-res\raw_logo.png</Message>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +165,35 @@ copy NUL boop.txt</Command>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping ..\Pub_ts\iris-front\public\manifest.json</Message>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol.ts">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BuildInParallel>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</BuildInParallel>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BuildInParallel>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</BuildInParallel>
+      <MaxProcesses Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">999</MaxProcesses>
+      <MaxProcesses Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">999</MaxProcesses>
+      <MaxProcesses Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">999</MaxProcesses>
+      <MaxProcesses Condition="'$(Configuration)|$(Platform)'=='Release|x64'">999</MaxProcesses>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Booping %(Identity)</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Booping %(Identity)</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Booping %(Identity)</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Booping %(Identity)</Message>
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
