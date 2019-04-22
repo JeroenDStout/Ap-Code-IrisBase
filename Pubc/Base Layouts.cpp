@@ -24,7 +24,6 @@ CON_RMR_DEFINE_CLASS(Layouts);
 
 void Layouts::initialise(const JSON param)
 {
-	this->update_connexion_enumeration();
 }
 
 void Layouts::deinitialise(const JSON param)
@@ -36,7 +35,7 @@ void Layouts::deinitialise(const JSON param)
 
 void Layouts::update_connexion_enumeration()
 {
-	// TODO
+	this->Connextion_Enum.add_from_directory(this->Layout_Props.Setup_Dir / "Connexions");
 }
 
     //  Settings
@@ -45,14 +44,23 @@ void Layouts::update_connexion_enumeration()
 void Layouts::set_setup_dir(Path path)
 {
     this->Layout_Props.Setup_Dir = Toolbox::Core::Get_Environment()->expand_dir(path);
+	this->update_connexion_enumeration();
 }
 
     //  Util
     // --------------------
 
-const Layouts::JSON Layouts::get_connexion_enumeration() const
+Layouts::JSON Layouts::get_connexion_enumeration() const
 {
-	return { { "tba", "tba" } };
+	const auto & list = this->Connextion_Enum.get_connexions();
+
+	JSON res = JSON::array();
+
+	for (const auto & elem : list) {
+		res.push_back({ { "name", elem.Name }, { "port", elem.Port }, { "icon", elem.Icon } });
+	}
+
+	return res;
 }
 
 Layouts::Path Layouts::get_setup_dir()

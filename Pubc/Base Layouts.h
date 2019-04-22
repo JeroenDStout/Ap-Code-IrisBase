@@ -9,6 +9,7 @@
 #pragma once
 
 #include "IrisBase/Pubc/Interface Layouts.h"
+#include "IrisBase/Pubc/Connexion Enumerator.h"
 
 namespace IrisBack {
 namespace Base {
@@ -17,10 +18,11 @@ namespace Base {
         CON_RMR_DECLARE_CLASS(Layouts, IrisBack::Core::ILayouts);
 
     protected:
-
         struct __LayoutProps {
 			Path	Setup_Dir;
         } Layout_Props;
+
+		Connexion::ConnexionEnumerator	Connextion_Enum;
 
 	public:
         ~Layouts() override { ; }
@@ -33,7 +35,7 @@ namespace Base {
         virtual void set_setup_dir(const Path);
         virtual Path get_setup_dir();
 
-		const JSON get_connexion_enumeration() const override;
+		JSON get_connexion_enumeration() const override;
 	};
 
 }

@@ -24,7 +24,7 @@ namespace Core {
 		virtual void initialise(const JSON) = 0;
 		virtual void deinitialise(const JSON) = 0;
 
-		virtual const JSON get_connexion_enumeration() const = 0;
+		virtual JSON get_connexion_enumeration() const = 0;
 
         virtual void set_setup_dir(const Path) = 0;
         virtual Path get_setup_dir() = 0;

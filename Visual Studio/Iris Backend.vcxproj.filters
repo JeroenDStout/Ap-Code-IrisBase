@@ -31,6 +31,9 @@
     <ClCompile Include="..\Pubc\Base Layouts.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
+    <ClCompile Include="..\Pubc\Connexion Enumerator.cpp">
+      <Filter>Iris</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="../Pubc/Version.h">
@@ -50,6 +53,9 @@
     </ClInclude>
     <ClInclude Include="..\Pubc\Base Layouts.h">
       <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Pubc\Connexion Enumerator.h">
+      <Filter>Iris</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
