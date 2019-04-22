@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'SGGolden';
+    src: url('-ex-res/StoutGamesGolden.eot');
+    src: url('-ex-res/StoutGamesGolden.eot?#iefix') format('embedded-opentype'), url('-ex-res/StoutGamesGolden.ttf') format('truetype'), url('-ex-res/StoutGamesGolden.svg#webfont') format('svg');
+}
+
 body {
     margin: 0;
     padding: 0;
