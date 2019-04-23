@@ -1,17 +1,30 @@
 {
   "vars" : [
     { "widget-dir" : "{cur-dir}/../IrisWidget/" },
-    { "conduits-dir" : "{cur-dir}/../Conduits/pub_ts/" },
-    { "ex-dir" : "{cur-dir}/Pub_ts/iris-front/src/-ex-ts" }
+    { "conduits-dir" : "{cur-dir}/../Conduits/" },
+    { "ex-dir" : "{cur-dir}/Pub_ts/iris-front/src/-ex-ts" },
+    { "ex-gen-dir" : "{cur-dir}/Pub_ts/iris-front/src/-ex-repo" }
   ],
   "pipes" : [
     { "tool" : "smartcopy",
       "paths" : [
+        { "in"  : "{cur-dir}/-genc/repo_version.json*",
+          "out" : "{ex-gen-dir}/iris_base_version.json" },
+        { "in"  : "{widget-dir}/-genc/repo_version.json*",
+          "out" : "{ex-gen-dir}/widgets_base_version.json" },
+        { "in"  : "{conduits-dir}/-genc/repo_version.json*",
+          "out" : "{ex-gen-dir}/conduits_base_version_.json" }
+      ]
+    },
+    { "tool" : "smartcopy",
+      "paths" : [
         { "in"  : "{widget-dir}/Pub_ts/shared/*~file~",
           "out" : "{ex-dir}/{file}" }
-      ],
+      ]
+    },
+    { "tool" : "smartcopy",
       "paths" : [
-        { "in"  : "{conduits-dir}/Websocket Protocol.ts",
+        { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol.ts",
           "out" : "{ex-dir}/Websocket Protocol.ts" }
       ]
     }
