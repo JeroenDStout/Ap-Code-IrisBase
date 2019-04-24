@@ -1,0 +1,57 @@
+@import 'setup';
+
+.side-panel {
+    position: absolute;
+    left: 0px;
+    width: $side-panel-image-size + 10px;
+    height: 100%;
+    overflow: hidden;
+    background: rgba(72,79,78,1);
+    background: -moz-linear-gradient(left, rgba(72,79,78,1) 0%, rgba(59,55,54,0.5) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(72,79,78,1)), color-stop(100%, rgba(59,55,54,0.5)));
+    background: -webkit-linear-gradient(left, rgba(72,79,78,1) 0%, rgba(59,55,54,0.5) 100%);
+    background: -o-linear-gradient(left, rgba(72,79,78,1) 0%, rgba(59,55,54,0.5) 100%);
+    background: -ms-linear-gradient(left, rgba(72,79,78,1) 0%, rgba(59,55,54,0.5) 100%);
+    background: linear-gradient(to right, rgba(72,79,78,1) 0%, rgba(59,55,54,0.5) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#484f4e', endColorstr='#3b3736', GradientType=1 );
+}
+
+.side-panel .connexion-util {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: $side-panel-image-size + 10px;
+    bottom: $side-panel-image-size + 10px;
+}
+
+.side-panel .connexion-util .connexion div {
+    display: none;
+}
+
+.side-panel .connexion-util {
+    .connexion {
+        position: relative;
+        display: block;
+        width: $side-panel-image-size + 10px;
+        height: $side-panel-image-size + 5px;
+        margin-bottom: 0px;
+
+        .icon {
+            width: $side-panel-image-size;
+            height: $side-panel-image-size;
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            display: block;
+        }
+
+        .icon img {
+            width: 100%; height: 100%;
+            display: inline;
+        }
+    }
+
+    .connexion.disconnected {
+        opacity: .4;
+    }
+}

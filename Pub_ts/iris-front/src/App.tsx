@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './App.css';
+import './-gen/App.css';
 
 import ConnexionUtil from './connexion-util';
 import { Socketman } from './socketman';
