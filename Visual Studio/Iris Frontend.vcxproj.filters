@@ -1,12 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*.scss" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*.ts" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-repo\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-res\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-widget\*" />
+    <CustomBuild Include="..\Pub_ts\iris-front\build_using_tool.txt" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-res\raw_logo.png" />
+    <CustomBuild Include="..\Pub_ts\iris-front\public\manifest.json" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.scss">
+      <Filter>scss</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.ts">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\*.css">
+      <Filter>css</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="css">
+      <UniqueIdentifier>{9092a891-ea61-4578-89a2-986f5e29dc25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="typescript">
+      <UniqueIdentifier>{9092a891-ea61-4578-89a2-986f5e29dc26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scss">
+      <UniqueIdentifier>{9092a891-ea61-4578-89a2-986f5e29dc27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

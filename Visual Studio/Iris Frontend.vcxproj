@@ -148,11 +148,22 @@ copy NUL boop.txt</Command>
   <ItemGroup>
     <CustomBuild Include="..\Pub_ts\iris-front\src\*.scss">
       <FileType>Document</FileType>
-      <Command>sass "%(Identity)" "%(RelativeDir)\-gen\%(Filename).css"</Command>
-      <Outputs>%(RelativeDir)\-gen\%(Filename).css</Outputs>
+      <Command>sass "%(Identity)" "%(RelativeDir)\-gen\%(Filename).scss"</Command>
+      <Outputs>%(RelativeDir)\-gen\%(Filename).scss</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>4</MaxProcesses>
       <Message>sass %(Identity)</Message>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\*.css">
+      <FileType>Document</FileType>
+      <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <BuildInParallel>true</BuildInParallel>
+      <MaxProcesses>4</MaxProcesses>
+      <Message>Booping %(Identity)</Message>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
