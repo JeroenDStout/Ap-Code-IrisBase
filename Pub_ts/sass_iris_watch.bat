@@ -1,0 +1,1 @@
+sass --watch iris-front/src:iris-front/src/-gen

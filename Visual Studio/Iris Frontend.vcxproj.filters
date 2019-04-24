@@ -1,25 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="..\Pub_ts\iris-front\build_using_tool.txt" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-*\**" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol.ts" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*" />
-    <CustomBuild Include="..\Pub_ts\iris-front\public\manifest.json" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol.ts">
-      <Filter>External</Filter>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="External">
-      <UniqueIdentifier>{3e45e88a-3671-4356-8c28-3dc80c77ed2d}</UniqueIdentifier>
-    </Filter>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.scss" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-repo\*" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-res\*" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\*" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-widget\*" />
   </ItemGroup>
 </Project>

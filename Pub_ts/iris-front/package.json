@@ -12,6 +12,8 @@
     "babel-runtime": "6.26.0",
     "tslint": "5.16.0",
     "tslib": "1.9.3",
+    "react-beautiful-dnd": "11.0.0",
+    "@rebass/grid": "^6.0.0",
     "fbemitter": "2.1.1"
   },
   "scripts": {
@@ -26,6 +28,7 @@
     "@types/react": "^16.8.13",
     "@types/react-dom": "^16.8.4",
     "@types/fbemitter": "2.0.32",
+    "@types/react-beautiful-dnd": "11.0.1",
     "typescript": "^3.4.4"
   }
 }
