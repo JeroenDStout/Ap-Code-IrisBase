@@ -56,7 +56,7 @@ class ConnexionElem extends React.Component<IConnexionElem, object> {
 
         return (
             <div className={className} >
-                <div><img src={state_info.host_icon} /></div>
+                <div className="icon"><img src={state_info.host_icon} /></div>
                 <div className="name">{state_info.host_name}</div>
                 {state_info.available ? <div className="version">{state_info.host_version}</div> : ''}
             </div>
