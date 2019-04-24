@@ -40,8 +40,6 @@ class ConnexionUtil extends React.Component {
                 <ConnexionElem state_info={item} key={item.host_name} />
             )}
         </div>);
-
-        // 
     }
 }
 
