@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <CustomBuild Include="..\Pub_ts\iris-front\build_using_tool.txt" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-res\raw_logo.png" />
     <CustomBuild Include="..\Pub_ts\iris-front\public\manifest.json" />
     <CustomBuild Include="..\Pub_ts\iris-front\src\*.scss">
       <Filter>scss</Filter>
@@ -16,6 +15,12 @@
     <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\*.css">
       <Filter>css</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\ex-ts\*">
+      <Filter>typescript\ex</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\ex-res\*">
+      <Filter>res</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="css">
@@ -26,6 +31,12 @@
     </Filter>
     <Filter Include="scss">
       <UniqueIdentifier>{9092a891-ea61-4578-89a2-986f5e29dc27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="typescript\ex">
+      <UniqueIdentifier>{32e88d61-f2f9-47ac-af22-11dde4f5d92d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res">
+      <UniqueIdentifier>{32e88d61-f2f9-47ac-af22-11dde4f5d92e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,11 +1,12 @@
 import * as React from 'react';
-import './-gen/App.css';
+import './-gen/app.css';
 
 //import ConnexionUtil from './connexion-util';
 import { Socketman } from './socketman';
 import SidePanel from './side-panel';
-import StreamArea from './stream-area';
-import { StreamWrangler } from './stream-wrangler';
+//import StreamArea from './stream-area';
+//import { StreamWrangler } from './stream-wrangler';
+import { DragWrangler } from './draggables';
 
 //import logo from './-ex-res/raw_logo.png';
 
@@ -14,7 +15,8 @@ class App extends React.Component {
 
     componentDidMount() {
         Socketman.commence();
-        StreamWrangler.commence();
+        DragWrangler.commence();
+        //StreamWrangler.commence();
     }
 
     render_side_panel() {
@@ -30,7 +32,6 @@ class App extends React.Component {
 
         return (
             <div>
-                <StreamArea />
                 <SidePanel />
             </div>
         );

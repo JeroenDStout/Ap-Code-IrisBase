@@ -25,6 +25,10 @@ export class SocketStateInfo {
 export class Socketman {
     static Current_Sockets: Array<Socket> = new Array<Socket>();
 
+    static Event_Name_Any                  = 'any';
+    static Event_Name_Socket_Enum_Changed  = 'enum';
+    static Event_Name_Socket_State_Changed = 'state';
+
     static Events_Socket_Change: Fbemit.EventEmitter = new Fbemit.EventEmitter();
     static Connect_Timeout: NodeJS.Timeout;
 
@@ -42,11 +46,12 @@ export class Socketman {
         for (let index = 0; index < this.Current_Sockets.length; ++index) {
             let value = this.Current_Sockets[index];
             let info = new SocketStateInfo();
-            info.host_name    = value.host_name;
-            info.host_icon    = value.host_icon;
-            info.host_port    = value.host_port;
-            info.available    = value.welcomed;
-            info.host_version = value.host_version;
+            info.host_name      = value.host_name;
+            info.host_icon      = value.host_icon;
+            info.host_port      = value.host_port;
+            info.available      = value.welcomed;
+            info.host_version   = value.host_version;
+            info.host_long_name = value.host_long_name;
             array.push(info);
         }
 
@@ -77,6 +82,7 @@ export class Socketman {
             let value = json[index];
             let socket: Socket = new Socket();
             socket.host_name = value["name"];
+            socket.host_long_name = value["long_name"];
             socket.host_icon = value["icon"];
             socket.host_port = value["port"];
             socket.host_version = "?";
@@ -86,7 +92,8 @@ export class Socketman {
         }
 
         this.try_connect_sockets();
-        this.Events_Socket_Change.emit('any');
+        this.Events_Socket_Change.emit(this.Event_Name_Any);
+        this.Events_Socket_Change.emit(this.Event_Name_Socket_Enum_Changed);
     }
 
     static try_connect_sockets() {
@@ -117,7 +124,8 @@ export class Socketman {
                 state.connected = false;
                 state.welcomed = false;
                 if (last_state != false) {
-                    self.Events_Socket_Change.emit('any');
+                    self.Events_Socket_Change.emit(self.Event_Name_Socket_State_Changed);
+                    self.Events_Socket_Change.emit(self.Event_Name_Any);
                 }
             };
 
@@ -134,7 +142,8 @@ export class Socketman {
                     state.host_version = prop.Server_Version;
 
                     console.log('welcomed ' + state.host_name);
-                    self.Events_Socket_Change.emit('any');
+                    self.Events_Socket_Change.emit(self.Event_Name_Socket_State_Changed);
+                    self.Events_Socket_Change.emit(self.Event_Name_Any);
                 }
             };
         }

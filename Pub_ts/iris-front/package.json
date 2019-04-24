@@ -12,9 +12,10 @@
     "babel-runtime": "6.26.0",
     "tslint": "5.16.0",
     "tslib": "1.9.3",
-    "react-beautiful-dnd": "11.0.0",
-    "@rebass/grid": "^6.0.0",
-    "fbemitter": "2.1.1"
+    "react-smooth-dnd": "0.11.0",
+    "uuid": "*",
+    "fbemitter": "2.1.1",
+    "prop-types": "^15.5.7"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -28,7 +29,8 @@
     "@types/react": "^16.8.13",
     "@types/react-dom": "^16.8.4",
     "@types/fbemitter": "2.0.32",
-    "@types/react-beautiful-dnd": "11.0.1",
+    "@types/prop-types": "*",
+    "@types/node": "*",
     "typescript": "^3.4.4"
   }
 }

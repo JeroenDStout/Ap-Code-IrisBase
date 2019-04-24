@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SocketStateInfo, Socketman } from './socketman';
 import * as Fbemit from 'fbemitter';
-import './-gen/App.css';
+import './-gen/app.css';
 
 class ConnexionUtil extends React.Component {
     state = { connexion_state: Array<SocketStateInfo>() };

@@ -16,42 +16,77 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#484f4e', endColorstr='#3b3736', GradientType=1 );
 }
 
-.side-panel .connexion-util {
+.side-panel .dnd {
     position: absolute;
     left: 0px;
     right: 0px;
     top: $side-panel-image-size + 10px;
     bottom: $side-panel-image-size + 10px;
-}
 
-.side-panel .connexion-util .connexion div {
-    display: none;
-}
+    .smooth-dnd-container {
+        height: 100%;
+    }
 
-.side-panel .connexion-util {
-    .connexion {
-        position: relative;
-        display: block;
+    .icon {
         width: $side-panel-image-size + 10px;
         height: $side-panel-image-size + 5px;
-        margin-bottom: 0px;
+        overflow: hidden;
+        border-radius: 2px;
+        cursor: grab;
 
-        .icon {
-            width: $side-panel-image-size;
-            height: $side-panel-image-size;
+        img {
             position: absolute;
             left: 5px;
-            top: 5px;
-            display: block;
+            right: 5px;
+            width: $side-panel-image-size;
+            height: $side-panel-image-size;
         }
 
-        .icon img {
-            width: 100%; height: 100%;
-            display: inline;
+        .host-name {
+            position: absolute;
+            left: 5px;
+            right: 5px;
+            width: $side-panel-image-size;
+            height: $side-panel-image-size;
+
+            span {
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-right: -50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000, 0px 1px 15px rgba(9,21,43,0.73);
+                opacity: .8;
+            }
+
+            span:hover {
+                opacity: 1;
+            }
         }
     }
 
-    .connexion.disconnected {
-        opacity: .4;
+    .icon-drop-preview {
+        background: -moz-radial-gradient(center, ellipse cover, rgba(0,0,0,0.48) 0%, rgba(15,24,39,0.48) 30%, rgba(19,31,51,0.37) 39%, rgba(14,23,55,0) 68%, rgba(8,15,59,0) 100%);
+        background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(0,0,0,0.48)), color-stop(30%, rgba(15,24,39,0.48)), color-stop(39%, rgba(19,31,51,0.37)), color-stop(68%, rgba(14,23,55,0)), color-stop(100%, rgba(8,15,59,0)));
+        background: -webkit-radial-gradient(center, ellipse cover, rgba(0,0,0,0.48) 0%, rgba(15,24,39,0.48) 30%, rgba(19,31,51,0.37) 39%, rgba(14,23,55,0) 68%, rgba(8,15,59,0) 100%);
+        background: -o-radial-gradient(center, ellipse cover, rgba(0,0,0,0.48) 0%, rgba(15,24,39,0.48) 30%, rgba(19,31,51,0.37) 39%, rgba(14,23,55,0) 68%, rgba(8,15,59,0) 100%);
+        background: -ms-radial-gradient(center, ellipse cover, rgba(0,0,0,0.48) 0%, rgba(15,24,39,0.48) 30%, rgba(19,31,51,0.37) 39%, rgba(14,23,55,0) 68%, rgba(8,15,59,0) 100%);
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0.48) 0%, rgba(15,24,39,0.48) 30%, rgba(19,31,51,0.37) 39%, rgba(14,23,55,0) 68%, rgba(8,15,59,0) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#080f3b', GradientType=1 );
+    }
+
+    .smooth-dnd-ghost {
+        opacity: .8;
+
+        .icon img {
+            -webkit-box-shadow: 0px 4px 30px 0px rgba(11,31,41,1);
+            -moz-box-shadow: 0px 4px 30px 0px rgba(11,31,41,1);
+            box-shadow: 0px 4px 30px 0px rgba(11,31,41,1);
+        }
+    }
+
+    .dummy {
     }
 }
