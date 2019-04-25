@@ -18,6 +18,7 @@ namespace fs = std::experimental::filesystem;
     // --------------------
 
 CON_RMR_DEFINE_CLASS(Layouts);
+CON_RMR_REGISTER_FUNC(Layouts, conduit_connect_layouts);
 
     //  Setup
     // --------------------
@@ -36,6 +37,11 @@ void Layouts::deinitialise(const JSON param)
 void Layouts::update_connexion_enumeration()
 {
 	this->Connextion_Enum.add_from_directory(this->Layout_Props.Setup_Dir / "Connexions");
+}
+
+void Layouts::_conduit_connect_layouts(Conduits::Raw::IRelayMessage * msg) noexcept
+{
+
 }
 
     //  Settings

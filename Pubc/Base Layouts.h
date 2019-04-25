@@ -36,6 +36,8 @@ namespace Base {
         virtual Path get_setup_dir();
 
 		JSON get_connexion_enumeration() const override;
+
+        CON_RMR_DECLARE_FUNC(conduit_connect_layouts);
 	};
 
 }
