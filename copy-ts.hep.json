@@ -24,8 +24,12 @@
     },
     { "tool" : "smartcopy",
       "paths" : [
-        { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol.ts",
-          "out" : "{ex-dir}/Websocket Protocol.ts" }
+        { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol Shared.ts",
+          "out" : "{ex-dir}/Websocket Protocol Shared.ts" },
+        { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol What-ho.ts",
+          "out" : "{ex-dir}/Websocket Protocol What-ho.ts" },
+        { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol Messages.ts",
+          "out" : "{ex-dir}/Websocket Protocol Messages.ts" }
       ]
     }
   ]
