@@ -213,8 +213,6 @@ export class Socketman {
             };
 
             ws.onmessage = function (message: any) {
-                console.log(message);
-
                     // If we are not connected yet, the response
                     // must be the protocol message
                 if (!state.welcomed) {
@@ -231,21 +229,28 @@ export class Socketman {
                     self.Events_Socket_Change.emit(self.Event_Name_Socket_State_Changed);
                     self.Events_Socket_Change.emit(self.Event_Name_Any);
 
+                        // Debug: send rq for stats!
                     let msg = new WsMsg.Message();
-                    msg.String            = "ping";
+                    msg.String            = "stats";
                     msg.set_requires_repsonse(true);
 
                     let handler = self.send_en_passant_on_socket(state.host_name, msg) as SocketResponseHandler;
                     handler.on_success = function (s_msg: WsMsg.Message) {
-                        console.log("huzzah! " + s_msg.String);
-                        console.log(new TextDecoder().decode(s_msg.Segments.get(0) as Uint8Array));
+                        console.log("Asked " + state.host_long_name + " for stats:", s_msg.get_segment_as_json(0));
+                    }
+                    handler.on_failure = function (s_msg: WsMsg.Message) {
+                        console.log("Asked " + state.host_long_name + " for stats, but got failure: ", s_msg.String);
                     }
 
                     return;
                 }
                 
-                let des = WsMsg.try_parse_message(new Uint8Array(message.data));
-                console.log(new TextDecoder().decode(des.Segments.get(0) as Uint8Array));
+                let msg = WsMsg.try_parse_message(new Uint8Array(message.data));
+                console.log(msg);
+
+                if (msg.get_is_response()) {
+                    self.deliver_to_response_handler(msg);
+                }
             };
         }
 
