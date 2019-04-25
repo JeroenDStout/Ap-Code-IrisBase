@@ -23,8 +23,14 @@ export class SocketStateInfo {
     available: boolean;
 }
 
-export class SocketResponseHandler {
+export interface ISocketResponseHandler {
+    on_success(msg: WsMsg.Message): void;
+    on_failure(msg: WsMsg.Message): void;
+}
+
+export class SocketResponseHandler implements ISocketResponseHandler {
     message_id: number;
+    one_time_use: boolean;
     on_success(msg: WsMsg.Message): void { msg; }
     on_failure(msg: WsMsg.Message): void { msg; }
 }
@@ -32,7 +38,7 @@ export class SocketResponseHandler {
 export class Socketman {
     static Current_Sockets = new Array<Socket>();
     static Open_Sockets = new Map<string, Socket>();
-    static Pending_En_Passant_Handlers = new Map<number, SocketResponseHandler>();
+    static Pending_Handlers = new Map<number, SocketResponseHandler>();
 
     static Next_Free_Message_ID            = 1;
 
@@ -71,7 +77,7 @@ export class Socketman {
         return array;
     }
 
-    static send_en_passant_on_socket(socket_name:string, message:WsMsg.Message): SocketResponseHandler|undefined
+    static send_en_passant_on_socket(socket_name:string, message:WsMsg.Message): ISocketResponseHandler|undefined
     {
             // Find open socket
         let socket = this.Open_Sockets.get(socket_name);
@@ -87,7 +93,7 @@ export class Socketman {
         message.Reply_To_Me_ID      = 0;
 
         if (message.get_requires_response()) {
-            res_handler = this.CreateResponseHandler(socket as Socket);
+            res_handler = this.create_response_handler(socket as Socket);
             message.Reply_To_Me_ID = res_handler.message_id;
         }
         
@@ -96,18 +102,40 @@ export class Socketman {
         return res_handler;
     }
 
-    static CreateResponseHandler(socket: Socket): SocketResponseHandler {
+    static create_response_handler(socket: Socket): SocketResponseHandler {
             // For now messy way of getting free message id
         let id = this.Next_Free_Message_ID;
-        while (this.Pending_En_Passant_Handlers.has(id)) {
+        while (this.Pending_Handlers.has(id)) {
             id = this.Next_Free_Message_ID = (this.Next_Free_Message_ID + 1) & 0xFFFF;
         }
 
         let ret = new SocketResponseHandler();
         ret.message_id = id;
-        this.Pending_En_Passant_Handlers.set(id, ret);
+        this.Pending_Handlers.set(id, ret);
 
         return ret;
+    }
+
+    static deliver_to_response_handler(msg: WsMsg.Message) {
+        let _handler = this.Pending_Handlers.get(msg.Recipient_ID);
+        if (_handler === undefined) {
+            throw "Unknown handler requested as recipient ID: " + msg.Recipient_ID;
+        }
+
+        let handler = _handler as SocketResponseHandler;
+
+        console.log(handler);
+
+        if (msg.get_has_succeeded()) {
+            handler.on_success(msg);
+        }
+        else {
+            handler.on_failure(msg);
+        }
+
+        if (handler.one_time_use) {
+            this.Pending_Handlers.delete(msg.Recipient_ID);
+        }
     }
 
     static fetch_connexion_enum() {
