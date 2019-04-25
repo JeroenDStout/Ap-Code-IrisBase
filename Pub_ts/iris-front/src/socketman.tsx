@@ -1,5 +1,6 @@
 import * as Fbemit from 'fbemitter';
-import * as WSProt from './-ex-ts/Websocket Protocol'
+import * as WsWH   from './-ex-ts/Websocket Protocol What-ho'
+import * as WsMsg  from './-ex-ts/Websocket Protocol Messages'
 
 class Socket {
     host_name: string;
@@ -22,18 +23,30 @@ export class SocketStateInfo {
     available: boolean;
 }
 
+export class SocketResponseHandler {
+    message_id: number;
+    on_success(msg: WsMsg.Message): void { msg; }
+    on_failure(msg: WsMsg.Message): void { msg; }
+}
+
 export class Socketman {
-    static Current_Sockets: Array<Socket> = new Array<Socket>();
+    static Current_Sockets = new Array<Socket>();
+    static Open_Sockets = new Map<string, Socket>();
+    static Pending_En_Passant_Handlers = new Map<number, SocketResponseHandler>();
+
+    static Next_Free_Message_ID            = 1;
 
     static Event_Name_Any                  = 'any';
     static Event_Name_Socket_Enum_Changed  = 'enum';
     static Event_Name_Socket_State_Changed = 'state';
+    static Event_Name_Socket_Connect(name: string): string { return 'connect ' + name; };
+    static Event_Name_Socket_Disconnect(name: string): string { return 'connect ' + name; };
 
     static Events_Socket_Change: Fbemit.EventEmitter = new Fbemit.EventEmitter();
     static Connect_Timeout: NodeJS.Timeout;
 
     static commence(): void {
-        console.log("Socketman commencing");
+        console.log("Socketman: commencing");
         this.fetch_connexion_enum();
 
         let self = this;
@@ -58,6 +71,45 @@ export class Socketman {
         return array;
     }
 
+    static send_en_passant_on_socket(socket_name:string, message:WsMsg.Message): SocketResponseHandler|undefined
+    {
+            // Find open socket
+        let socket = this.Open_Sockets.get(socket_name);
+        if (socket == undefined) {
+            console.log("Socketman: Message on non-open socket: '" + socket_name + "'", message);
+            return undefined;
+        }
+
+        let res_handler: SocketResponseHandler|undefined = undefined;
+
+            // Create en passant routing info
+        message.Recipient_ID        = 0;
+        message.Reply_To_Me_ID      = 0;
+
+        if (message.get_requires_response()) {
+            res_handler = this.CreateResponseHandler(socket as Socket);
+            message.Reply_To_Me_ID = res_handler.message_id;
+        }
+        
+        socket.socket.send(WsMsg.try_stringify_message(message));
+
+        return res_handler;
+    }
+
+    static CreateResponseHandler(socket: Socket): SocketResponseHandler {
+            // For now messy way of getting free message id
+        let id = this.Next_Free_Message_ID;
+        while (this.Pending_En_Passant_Handlers.has(id)) {
+            id = this.Next_Free_Message_ID = (this.Next_Free_Message_ID + 1) & 0xFFFF;
+        }
+
+        let ret = new SocketResponseHandler();
+        ret.message_id = id;
+        this.Pending_En_Passant_Handlers.set(id, ret);
+
+        return ret;
+    }
+
     static fetch_connexion_enum() {
         fetch("/web/iris/connexions.json")
             .then(res => {
@@ -73,8 +125,7 @@ export class Socketman {
     }
 
     static receive_connexion_enum(json: any) {
-        console.log("Updating connexion enum");
-        console.log(json);
+        console.log("Socketman: Updating connexion enum", json);
 
         this.Current_Sockets = new Array<Socket>();
 
@@ -104,18 +155,20 @@ export class Socketman {
                 continue;
 
             let ws = state.socket = new WebSocket('ws://' + location.hostname + ':' + state.host_port);
+            state.socket.binaryType = 'arraybuffer';
+
             let self = this;
 
             ws.onopen = function () {
-                console.log('connected ' + state.host_name);
+                console.log('Socketman: connected ' + state.host_name);
                 state.connected = true;
                 state.welcomed = false;
 
-                let prop = new WSProt.ClientProperties;
+                let prop = new WsWH.ClientProperties;
                 prop.Client_Name = "Iris Web (" + navigator.userAgent + ")";
                 prop.Client_Version = "v0.0.1"
 
-                ws.send(WSProt.create_welcome_message(prop));
+                ws.send(WsWH.create_what_ho_message(prop));
             };
 
             ws.onclose = function () {
@@ -124,27 +177,47 @@ export class Socketman {
                 state.connected = false;
                 state.welcomed = false;
                 if (last_state != false) {
+                    self.Open_Sockets.delete(state.host_name);
+                    self.Events_Socket_Change.emit(self.Event_Name_Socket_Connect(state.host_name));
                     self.Events_Socket_Change.emit(self.Event_Name_Socket_State_Changed);
                     self.Events_Socket_Change.emit(self.Event_Name_Any);
                 }
             };
 
-            ws.onmessage = function (event: any) {
-                console.log(state);
+            ws.onmessage = function (message: any) {
+                console.log(message);
+
                     // If we are not connected yet, the response
                     // must be the protocol message
                 if (!state.welcomed) {
-                    let prop = WSProt.parse_welcome_message_response(event.data);
-                    console.log(prop);
+                    let prop = WsWH.parse_what_ho_response(new Uint8Array(message.data));
                     state.welcomed = true;
 
                     state.host_long_name = prop.Server_Name;
                     state.host_version = prop.Server_Version;
+                    
+                    self.Open_Sockets.set(state.host_name, state);
 
                     console.log('welcomed ' + state.host_name);
+                    self.Events_Socket_Change.emit(self.Event_Name_Socket_Disconnect(state.host_name));
                     self.Events_Socket_Change.emit(self.Event_Name_Socket_State_Changed);
                     self.Events_Socket_Change.emit(self.Event_Name_Any);
+
+                    let msg = new WsMsg.Message();
+                    msg.String            = "ping";
+                    msg.set_requires_repsonse(true);
+
+                    let handler = self.send_en_passant_on_socket(state.host_name, msg) as SocketResponseHandler;
+                    handler.on_success = function (s_msg: WsMsg.Message) {
+                        console.log("huzzah! " + s_msg.String);
+                        console.log(new TextDecoder().decode(s_msg.Segments.get(0) as Uint8Array));
+                    }
+
+                    return;
                 }
+                
+                let des = WsMsg.try_parse_message(new Uint8Array(message.data));
+                console.log(new TextDecoder().decode(des.Segments.get(0) as Uint8Array));
             };
         }
 

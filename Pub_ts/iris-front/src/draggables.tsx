@@ -15,6 +15,8 @@ export interface IDraggable {
     Reference_Name: string;
 
     Can_Reside_On_Sidebar: boolean;
+
+    Is_Being_Dragged: boolean;
 }
 
 export interface IItemSidebar extends IDraggable {
@@ -26,6 +28,7 @@ class ItemSocketRep implements IItemSidebar {
     Reference_Name: string;
     Can_Reside_On_Sidebar: boolean;
     Info: SocketStateInfo;
+    Is_Being_Dragged: boolean;
 
     constructor() {
         this.UUID = DragWrangler.get_unique_uuid();
@@ -35,7 +38,6 @@ class ItemSocketRep implements IItemSidebar {
     }
 
     render_as_icon(): JSX.Element {
-        console.log(this)
         return (
             <div className="icon">
                 <img src={this.Info.host_icon} />
@@ -64,7 +66,7 @@ export class DragWrangler {
     }
 
     static move_onto_sidebar(props: DropResult): void {
-        console.log(props);
+        console.log("drop " + props.payload.Reference_Name);
         
         const { removedIndex, addedIndex, payload } = props;
 
@@ -81,6 +83,10 @@ export class DragWrangler {
             this.Events_Sidebar.emit(this.Event_Name_Sidebar_Any);
             return;
         }
+    }
+
+    static remove_from_sidebar(item: IDraggable): void {
+        
     }
 
     static update_sockets(): void {
@@ -115,8 +121,7 @@ export class DragWrangler {
         let add = new ItemSocketRep();
         add.Reference_Name = elem_name;
         add.Info = Object.assign({}, info);
-        console.log(add);
-        list.push(add);
+        list.splice(0, 0, add);
     }
 
     static get_unique_uuid(): string {
