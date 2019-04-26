@@ -39,11 +39,14 @@ namespace Base {
 
 		void update_connexion_enumeration();
 		
+        bool async_relay_message(Conduits::Raw::IRelayMessage*) noexcept;
+
         virtual void set_setup_dir(const Path);
         virtual Path get_setup_dir();
 
 		JSON get_connexion_enumeration() const override;
-
+        
+        CON_RMR_DECLARE_FUNC(ping);
         CON_RMR_DECLARE_FUNC(conduit_connect_layouts);
 	};
 

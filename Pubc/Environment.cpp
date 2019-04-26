@@ -36,7 +36,7 @@ void Environment::create_layouts()
     this->Layouts = this->internal_allocate_layouts();
     this->Layouts->initialise({});
     
-    this->Simple_Relay.Call_Map["lay"] = std::bind(&Core::ILayouts::rmr_handle_message_immediate, this->Layouts, _1);
+    this->Simple_Relay.Call_Map["lay"] = std::bind(&Core::ILayouts::async_relay_message, this->Layouts, _1);
 }
 
 void Environment::internal_unload_all()

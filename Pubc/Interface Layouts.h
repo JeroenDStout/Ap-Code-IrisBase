@@ -23,6 +23,8 @@ namespace Core {
 
 		virtual void initialise(const JSON) = 0;
 		virtual void deinitialise(const JSON) = 0;
+        
+        virtual bool async_relay_message(Conduits::Raw::IRelayMessage*) noexcept = 0;
 
 		virtual JSON get_connexion_enumeration() const = 0;
 
