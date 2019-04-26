@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Conduits/Pubc/Base Nexus.h"
+
 #include "IrisBase/Pubc/Interface Layouts.h"
 #include "IrisBase/Pubc/Connexion Enumerator.h"
 
@@ -22,8 +24,13 @@ namespace Base {
 			Path	Setup_Dir;
         } Layout_Props;
 
+        std::thread              Conduit_Handler;
+        Conduits::NexusHolder<>  Message_Nexus;
+
 		Connexion::ConnexionEnumerator	Connextion_Enum;
 
+        void internal_conduit_handler();
+        void internal_handle_conduit_layout_message(Conduits::Raw::ConduitRef, Conduits::Raw::IRelayMessage*);
 	public:
         ~Layouts() override { ; }
         

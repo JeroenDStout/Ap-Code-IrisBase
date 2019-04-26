@@ -7,6 +7,8 @@
 #include "BlackRoot/Pubc/Exception.h"
 #include "BlackRoot/Pubc/Sys Path.h"
 
+#include "Conduits/Pubc/Base Conduit.h"
+
 #include "ToolboxBase/Pubc/Interface Environment.h"
 
 #include "IrisBase/Pubc/Base Layouts.h"
@@ -25,10 +27,39 @@ CON_RMR_REGISTER_FUNC(Layouts, conduit_connect_layouts);
 
 void Layouts::initialise(const JSON param)
 {
+    this->Conduit_Handler = std::thread([&] {
+        this->internal_conduit_handler();
+    });
 }
 
 void Layouts::deinitialise(const JSON param)
 {
+}
+
+    //  Handle
+    // --------------------
+
+void Layouts::internal_handle_conduit_layout_message(Conduits::Raw::ConduitRef, Conduits::Raw::IRelayMessage * msg)
+{
+    using cout = BlackRoot::Util::Cout;
+
+    cout{} << msg->get_path_string();
+
+    std::string str = "You told me '";
+    str.append(msg->get_path_string());
+    str.append("'!");
+
+    msg->set_response_string_with_copy(str.c_str());
+    msg->set_OK();
+    msg->release();
+}
+
+void Layouts::internal_conduit_handler()
+{
+    // TODO: extreme todo, always true
+    while (true) {
+        this->Message_Nexus->await_message_and_handle();
+    }
 }
 
     //  Connexions
@@ -41,7 +72,24 @@ void Layouts::update_connexion_enumeration()
 
 void Layouts::_conduit_connect_layouts(Conduits::Raw::IRelayMessage * msg) noexcept
 {
+    using cout = BlackRoot::Util::Cout;
 
+    cout{} << "Connect";
+
+    Conduits::FunctionOpenConduitHandler handler([&](Conduits::FunctionOpenConduitHandler::Result r){
+        if (!r.Is_Success) {
+            msg->set_response_string_with_copy("Opening conduit failed");
+            msg->set_FAILED();
+            return;
+        }
+        this->Message_Nexus->manual_acknowledge_conduit(r.Ref,
+            [&](Conduits::Raw::ConduitRef, const Conduits::ConduitUpdateInfo) {
+            },
+            std::bind(&Layouts::internal_handle_conduit_layout_message, this, std::placeholders::_1, std::placeholders::_2)
+        );
+        msg->set_OK_opened_conduit();
+    });
+    msg->open_conduit_for_sender(this->Message_Nexus, &handler);
 }
 
     //  Settings
