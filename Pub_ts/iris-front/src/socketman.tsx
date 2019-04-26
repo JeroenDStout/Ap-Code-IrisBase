@@ -23,9 +23,59 @@ export class SocketStateInfo {
     available: boolean;
 }
 
+export class ConduitInfo {
+}
+
 export interface ISocketResponseHandler {
     on_success(msg: WsMsg.Message): void;
     on_failure(msg: WsMsg.Message): void;
+}
+
+export class SocketSendInstr {
+    host_name: string;
+    message: WsMsg.Message;
+    on_success(msg: WsMsg.Message): void { msg; };
+    on_failure(msg: WsMsg.Message): void { msg; };
+}
+
+export interface ISocketConduit {
+    Is_Currently_Open: boolean;
+    Has_Been_Closed: boolean;
+
+    on_receive_message(msg: WsMsg.Message): void;
+    on_receive_info(msg: ConduitInfo): void;
+
+    send_message(instr: SocketSendInstr): void;
+}
+
+class SocketConduit implements ISocketConduit {
+    Is_Currently_Open = false;
+    Has_Been_Closed = false;
+    
+    Conduit_ID: number;
+    Recipient_ID: number;
+    Socket: Socket;
+    Original_Handler: SocketResponseHandler;
+
+    on_receive_message(msg: WsMsg.Message): void {
+        console.log("Unhandled message", msg);
+    }
+    on_receive_info(msg: ConduitInfo): void {
+        console.log("Unhandled info", msg);
+    }
+
+    send_message(instr: SocketSendInstr): void {
+        instr.message.Recipient_ID   = this.Recipient_ID;
+        instr.host_name              = this.Socket.host_name;
+        Socketman.send_message_on_socket(instr);
+    }
+}
+
+export class ConduitOpenInstr {
+    host_name: string;
+    message: WsMsg.Message;
+    on_success(msg: WsMsg.Message): void { msg; };
+    on_failure(msg: WsMsg.Message): void { msg; };
 }
 
 export class SocketResponseHandler implements ISocketResponseHandler {
@@ -38,7 +88,9 @@ export class SocketResponseHandler implements ISocketResponseHandler {
 export class Socketman {
     static Current_Sockets = new Array<Socket>();
     static Open_Sockets = new Map<string, Socket>();
+
     static Pending_Handlers = new Map<number, SocketResponseHandler>();
+    static Current_Conduits = new Map<number, SocketConduit>();
 
     static Next_Free_Message_ID            = 1;
 
@@ -77,43 +129,93 @@ export class Socketman {
         return array;
     }
 
-    static send_en_passant_on_socket(socket_name:string, message:WsMsg.Message): ISocketResponseHandler|undefined
+    static send_message_on_socket(instr:SocketSendInstr): ISocketResponseHandler|undefined
     {
             // Find open socket
-        let socket = this.Open_Sockets.get(socket_name);
+        let socket = this.Open_Sockets.get(instr.host_name);
         if (socket == undefined) {
-            console.log("Socketman: Message on non-open socket: '" + socket_name + "'", message);
+            console.log("Socketman: Message on non-open socket: '" + instr.host_name + "'", instr.message);
             return undefined;
         }
 
         let res_handler: SocketResponseHandler|undefined = undefined;
 
-            // Create en passant routing info
-        message.Recipient_ID        = 0;
-        message.Reply_To_Me_ID      = 0;
-
-        if (message.get_requires_response()) {
+        if (instr.message.get_requires_response()) {
             res_handler = this.create_response_handler(socket as Socket);
-            message.Reply_To_Me_ID = res_handler.message_id;
+            res_handler.on_success = instr.on_success;
+            res_handler.on_failure = instr.on_failure;
+            instr.message.Reply_To_Me_ID = res_handler.message_id;
         }
         
-        socket.socket.send(WsMsg.try_stringify_message(message));
+        socket.socket.send(WsMsg.try_stringify_message(instr.message));
 
         return res_handler;
     }
 
-    static create_response_handler(socket: Socket): SocketResponseHandler {
-            // For now messy way of getting free message id
-        let id = this.Next_Free_Message_ID;
-        while (this.Pending_Handlers.has(id)) {
-            id = this.Next_Free_Message_ID = (this.Next_Free_Message_ID + 1) & 0xFFFF;
-        }
+    static open_conduit(instr: ConduitOpenInstr): ISocketConduit {
+        let conduit = new SocketConduit();
 
+            // Find open socket
+        let socket = this.Open_Sockets.get(instr.host_name);
+        if (socket == undefined) {
+            console.log("Socketman: Open conduit on non-open socket: '" + instr.host_name + "'", instr.message);
+            return conduit;
+        }
+        
+            // Get free id
+        conduit.Conduit_ID = this.get_free_id();
+        conduit.Socket = socket;
+
+            // Get handler for conduit request
+        conduit.Original_Handler = this.create_response_handler(socket);
+        conduit.Original_Handler.on_success = function (msg: WsMsg.Message) {
+            if (!msg.get_confirm_open_conduit()) {
+                this.on_failure(msg);
+                return;
+            }
+            conduit.Is_Currently_Open = true;
+            conduit.Has_Been_Closed = false;
+            console.log("Conduit open... ", msg);
+            conduit.Recipient_ID = msg.Reply_To_Me_ID;
+            instr.on_success(msg);
+        }
+        conduit.Original_Handler.on_failure = function (msg: WsMsg.Message) {
+            console.log("Failed to open conduit!", msg);
+            conduit.Is_Currently_Open = false;
+            conduit.Has_Been_Closed = true;
+            instr.on_failure(msg);
+        }
+        
+            // Create en passant routing info
+        instr.message.Recipient_ID    = 0;
+        instr.message.Reply_To_Me_ID  = conduit.Original_Handler.message_id;
+        
+        console.log("Open conduit '" + socket.host_long_name + "', using '" + instr.message.String + "', id " + conduit.Recipient_ID);
+
+            // Send
+        socket.socket.send(WsMsg.try_stringify_message(instr.message));
+
+        return conduit;
+    }
+
+    static create_response_handler(socket: Socket): SocketResponseHandler {
         let ret = new SocketResponseHandler();
-        ret.message_id = id;
-        this.Pending_Handlers.set(id, ret);
+        ret.message_id = this.get_free_id();
+        this.Pending_Handlers.set(ret.message_id, ret);
 
         return ret;
+    }
+
+    static get_free_id(): number {
+            // For now messy way of getting free message id
+        let id = this.Next_Free_Message_ID;
+        while (this.Pending_Handlers.has(id) || this.Current_Conduits.has(id)) {
+            id = (this.Next_Free_Message_ID = ((this.Next_Free_Message_ID + 1) & 0xFFFFFFFF));
+        }
+        
+        this.Next_Free_Message_ID += 1;
+
+        return id;
     }
 
     static deliver_to_response_handler(msg: WsMsg.Message) {
@@ -123,8 +225,6 @@ export class Socketman {
         }
 
         let handler = _handler as SocketResponseHandler;
-
-        console.log(handler);
 
         if (msg.get_has_succeeded()) {
             handler.on_success(msg);
@@ -224,7 +324,7 @@ export class Socketman {
                     
                     self.Open_Sockets.set(state.host_name, state);
 
-                    console.log('welcomed ' + state.host_name);
+                    console.log('Socketman: welcomed ' + state.host_name);
                     self.Events_Socket_Change.emit(self.Event_Name_Socket_Disconnect(state.host_name));
                     self.Events_Socket_Change.emit(self.Event_Name_Socket_State_Changed);
                     self.Events_Socket_Change.emit(self.Event_Name_Any);
@@ -234,20 +334,24 @@ export class Socketman {
                     msg.String            = "stats";
                     msg.set_requires_repsonse(true);
 
-                    let handler = self.send_en_passant_on_socket(state.host_name, msg) as SocketResponseHandler;
-                    handler.on_success = function (s_msg: WsMsg.Message) {
+                    let instr = new SocketSendInstr();
+                    instr.host_name = state.host_name;
+                    instr.message   = msg;
+
+                    instr.on_success = function (s_msg: WsMsg.Message) {
                         console.log("Asked " + state.host_long_name + " for stats:", s_msg.get_segment_as_json(0));
                     }
-                    handler.on_failure = function (s_msg: WsMsg.Message) {
+                    instr.on_failure = function (s_msg: WsMsg.Message) {
                         console.log("Asked " + state.host_long_name + " for stats, but got failure: ", s_msg.String);
                     }
 
+                    self.send_message_on_socket(instr);
                     return;
                 }
                 
                 let msg = WsMsg.try_parse_message(new Uint8Array(message.data));
-                console.log(msg);
-
+                console.log("Message from '" + state.host_long_name + "'", msg);
+                
                 if (msg.get_is_response()) {
                     self.deliver_to_response_handler(msg);
                 }
