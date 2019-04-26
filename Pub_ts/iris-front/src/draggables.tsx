@@ -3,7 +3,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import * as React from 'react';
-import { SocketStateInfo, Socketman } from './socketman';
+import { SocketStateInfo, Socketman, ISocketConduit, ConduitOpenInstr, ConduitInfo } from './socketman';
+import * as WsMsg  from './-ex-ts/Websocket Protocol Messages'
 import { DropResult } from "react-smooth-dnd";
 import * as Fbemit from 'fbemitter';
 import './-gen/app.css';
@@ -57,6 +58,8 @@ export class DragWrangler {
     static Events_Sidebar: Fbemit.EventEmitter = new Fbemit.EventEmitter();
     static Event_Name_Sidebar_Any = 'any';
 
+    static Conduit_Iris: ISocketConduit;
+
     static commence() {
         console.log("Draggables commencing");
 
@@ -86,7 +89,6 @@ export class DragWrangler {
     }
 
     static remove_from_sidebar(item: IDraggable): void {
-        
     }
 
     static update_sockets(): void {
@@ -94,6 +96,57 @@ export class DragWrangler {
         
             // Obtain a list of all current sockets
         let info_to_be_found = Socketman.get_socket_state_info();
+        
+            // Check iris' state
+        if (this.Conduit_Iris == undefined || !this.Conduit_Iris.Is_Currently_Open) {
+            for (let it_info = 0; it_info < info_to_be_found.length; it_info++) {
+                let info = info_to_be_found[it_info];
+
+                if (info.host_name != "ir")
+                    continue;
+
+                if (!info.available)
+                    break;
+                    
+                let self = this;
+
+                let msg = new WsMsg.Message();
+                msg.String            = "lay/conduit_connect_layouts";
+                msg.set_requires_repsonse(true);
+
+                let instr = new ConduitOpenInstr();
+                instr.host_name  = "ir";
+                instr.message    = msg;
+
+                instr.on_success = function (msg: WsMsg.Message) {
+                        // Send debug boop mesasge
+                    let sub_msg = new WsMsg.Message();
+                    sub_msg.String            = "boop";
+                    sub_msg.set_requires_repsonse(true);
+
+                    let sub_instr = new ConduitOpenInstr();
+                    sub_instr.message = sub_msg;
+                    sub_instr.on_success = function (sub_msg: WsMsg.Message) {
+                        console.log("Boop was a success", sub_msg);
+                    }
+                    sub_instr.on_failure = function (sub_msg: WsMsg.Message) {
+                        console.log("Boop was a failure", sub_msg);
+                    }
+
+                    self.Conduit_Iris.send_message(sub_instr);
+                }
+
+                this.Conduit_Iris = Socketman.open_conduit(instr);
+                this.Conduit_Iris.on_receive_message = function (msg: WsMsg.Message) {
+                    console.log("Draggables receive message", msg);
+                }
+                this.Conduit_Iris.on_receive_info = function (info: ConduitInfo) {
+                    console.log("Draggables receive info", info);
+                }
+
+                break;
+            }
+        }
 
             // Loop through current sockets
         for (let it_info = 0; it_info < info_to_be_found.length; it_info++) {
@@ -102,6 +155,10 @@ export class DragWrangler {
         }
 
         this.Events_Sidebar.emit(this.Event_Name_Sidebar_Any);
+    }
+
+    static open_iris_conduit(): void {
+        
     }
 
     static find_or_update_socket_state(list: Array<IItemSidebar>, info: SocketStateInfo): void {
