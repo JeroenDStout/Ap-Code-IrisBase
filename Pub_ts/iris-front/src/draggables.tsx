@@ -121,16 +121,16 @@ export class DragWrangler {
                 instr.on_success = function (msg: WsMsg.Message) {
                         // Send debug boop mesasge
                     let sub_msg = new WsMsg.Message();
-                    sub_msg.String            = "boop";
+                    sub_msg.String            = "ping";
                     sub_msg.set_requires_repsonse(true);
 
                     let sub_instr = new ConduitOpenInstr();
                     sub_instr.message = sub_msg;
                     sub_instr.on_success = function (sub_msg: WsMsg.Message) {
-                        console.log("Boop was a success", sub_msg);
+                        console.log("Ping was a success", sub_msg);
                     }
                     sub_instr.on_failure = function (sub_msg: WsMsg.Message) {
-                        console.log("Boop was a failure", sub_msg);
+                        console.log("Ping was a failure", sub_msg);
                     }
 
                     self.Conduit_Iris.send_message(sub_instr);
