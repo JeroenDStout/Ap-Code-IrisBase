@@ -34,6 +34,12 @@
     <ClCompile Include="..\Pubc\Connexion Enumerator.cpp">
       <Filter>Iris</Filter>
     </ClCompile>
+    <ClCompile Include="..\Pubc\Iris Objects.cpp">
+      <Filter>Iris</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Pubc\Iris Objectman.cpp">
+      <Filter>Iris</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="../Pubc/Version.h">
@@ -55,6 +61,12 @@
       <Filter>Environment</Filter>
     </ClInclude>
     <ClInclude Include="..\Pubc\Connexion Enumerator.h">
+      <Filter>Iris</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Pubc\Iris Objects.h">
+      <Filter>Iris</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Pubc\Iris Objectman.h">
       <Filter>Iris</Filter>
     </ClInclude>
   </ItemGroup>

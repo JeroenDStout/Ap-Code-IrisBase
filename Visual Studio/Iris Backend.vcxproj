@@ -165,6 +165,8 @@
     <ClCompile Include="..\Pubc\Environment.cpp" />
     <ClCompile Include="..\Pubc\Base Layouts.cpp" />
     <ClCompile Include="..\Pubc\Interface Layouts.cpp" />
+    <ClCompile Include="..\Pubc\Iris Objectman.cpp" />
+    <ClCompile Include="..\Pubc\Iris Objects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="../Pubc/Version.h" />
@@ -173,6 +175,8 @@
     <ClInclude Include="..\Pubc\Environment.h" />
     <ClInclude Include="..\Pubc\Base Layouts.h" />
     <ClInclude Include="..\Pubc\Interface Layouts.h" />
+    <ClInclude Include="..\Pubc\Iris Objectman.h" />
+    <ClInclude Include="..\Pubc\Iris Objects.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
