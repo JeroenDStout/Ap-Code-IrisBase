@@ -69,6 +69,9 @@
     <ClInclude Include="..\Pubc\Iris Objectman.h">
       <Filter>Iris</Filter>
     </ClInclude>
+    <ClInclude Include="..\Pubc\Layouts Protocol.h">
+      <Filter>Iris</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Meta\licence_name.txt">
@@ -81,6 +84,9 @@
     </None>
     <None Include="../Meta/contributors.json">
       <Filter>Meta</Filter>
+    </None>
+    <None Include="..\Pub_ts\Layouts Protocol.ts">
+      <Filter>Iris</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

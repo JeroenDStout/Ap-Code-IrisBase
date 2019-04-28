@@ -37,6 +37,8 @@ void Environment::create_layouts()
     this->Layouts->initialise({});
     
     this->Simple_Relay.Call_Map["lay"] = std::bind(&Core::ILayouts::async_relay_message, this->Layouts, _1);
+    
+    this->Layouts->commence();
 }
 
 void Environment::internal_unload_all()
@@ -44,10 +46,12 @@ void Environment::internal_unload_all()
     this->RelayReceiverBaseClass::internal_unload_all();
 
     if (this->Layouts) {
+        this->Layouts->end_and_wait();
         this->Layouts->deinitialise({});
     }
 
     this->Simple_Relay.Call_Map.erase("lay");
+
 }
 
     //  Util

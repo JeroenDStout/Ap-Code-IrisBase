@@ -12,12 +12,15 @@
 
 #include "IrisBase/Pubc/Interface Layouts.h"
 #include "IrisBase/Pubc/Connexion Enumerator.h"
+#include "IrisBase/Pubc/Iris Objectman.h"
 
 namespace IrisBack {
 namespace Base {
 
 	class Layouts : public IrisBack::Core::ILayouts {
         CON_RMR_DECLARE_CLASS(Layouts, IrisBack::Core::ILayouts);
+
+        using UUID = Objects::Objectman::UUID;
 
     protected:
         struct __LayoutProps {
@@ -27,15 +30,23 @@ namespace Base {
         std::thread              Conduit_Handler;
         Conduits::NexusHolder<>  Message_Nexus;
 
+        Objects::Objectman       Objectman;
+        std::vector<UUID>        DirtyObjects;
+
 		Connexion::ConnexionEnumerator	Connextion_Enum;
 
         void internal_conduit_handler();
         void internal_handle_conduit_layout_message(Conduits::Raw::ConduitRef, Conduits::Raw::IRelayMessage*);
+
+        void internal_ensure_objectman_elements();
 	public:
         ~Layouts() override { ; }
         
         void initialise(const JSON) override;
         void deinitialise(const JSON) override;
+
+        void commence() override;
+        void end_and_wait() override;
 
 		void update_connexion_enumeration();
 		
@@ -47,7 +58,11 @@ namespace Base {
 		JSON get_connexion_enumeration() const override;
         
         CON_RMR_DECLARE_FUNC(ping);
+        CON_RMR_DECLARE_FUNC(commence);
+        CON_RMR_DECLARE_FUNC(end_and_wait);
         CON_RMR_DECLARE_FUNC(conduit_connect_layouts);
+        CON_RMR_DECLARE_FUNC(get_uuid_for_name);
+        CON_RMR_DECLARE_FUNC(get_state_for_uuids);
 	};
 
 }

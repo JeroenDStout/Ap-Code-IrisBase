@@ -24,6 +24,8 @@
     },
     { "tool" : "smartcopy",
       "paths" : [
+        { "in"  : "{cur-dir}/Pub_ts/Layouts Protocol.ts",
+          "out" : "{ex-dir}/Layouts Protocol.ts" },
         { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol Shared.ts",
           "out" : "{ex-dir}/Websocket Protocol Shared.ts" },
         { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol What-ho.ts",

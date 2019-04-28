@@ -111,22 +111,24 @@ export class Socketman {
         this.Connect_Timeout = setTimeout(function () { self.try_connect_sockets(); }, 1000);
     }
 
-    static get_socket_state_info(): Array<SocketStateInfo> {
-        let array = new Array<SocketStateInfo>();
+    static get_socket_state_info(name: string): SocketStateInfo|undefined {
+        let ret = new SocketStateInfo();
 
         for (let index = 0; index < this.Current_Sockets.length; ++index) {
             let value = this.Current_Sockets[index];
-            let info = new SocketStateInfo();
-            info.host_name      = value.host_name;
-            info.host_icon      = value.host_icon;
-            info.host_port      = value.host_port;
-            info.available      = value.welcomed;
-            info.host_version   = value.host_version;
-            info.host_long_name = value.host_long_name;
-            array.push(info);
+            if (value.host_name != name)
+                continue;
+                
+            ret.host_name      = value.host_name;
+            ret.host_icon      = value.host_icon;
+            ret.host_port      = value.host_port;
+            ret.available      = value.welcomed;
+            ret.host_version   = value.host_version;
+            ret.host_long_name = value.host_long_name;
+            return ret;
         }
 
-        return array;
+        return undefined;
     }
 
     static send_message_on_socket(instr:SocketSendInstr): ISocketResponseHandler|undefined
@@ -306,7 +308,10 @@ export class Socketman {
                 state.welcomed = false;
                 if (last_state != false) {
                     self.Open_Sockets.delete(state.host_name);
-                    self.Events_Socket_Change.emit(self.Event_Name_Socket_Connect(state.host_name));
+
+                    console.log(self.Event_Name_Socket_Disconnect(state.host_name));
+
+                    self.Events_Socket_Change.emit(self.Event_Name_Socket_Disconnect(state.host_name));
                     self.Events_Socket_Change.emit(self.Event_Name_Socket_State_Changed);
                     self.Events_Socket_Change.emit(self.Event_Name_Any);
                 }
@@ -323,9 +328,11 @@ export class Socketman {
                     state.host_version = prop.Server_Version;
                     
                     self.Open_Sockets.set(state.host_name, state);
+                    
+                    console.log(self.Event_Name_Socket_Connect(state.host_name));
 
                     console.log('Socketman: welcomed ' + state.host_name);
-                    self.Events_Socket_Change.emit(self.Event_Name_Socket_Disconnect(state.host_name));
+                    self.Events_Socket_Change.emit(self.Event_Name_Socket_Connect(state.host_name));
                     self.Events_Socket_Change.emit(self.Event_Name_Socket_State_Changed);
                     self.Events_Socket_Change.emit(self.Event_Name_Any);
 

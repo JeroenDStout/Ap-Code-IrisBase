@@ -1,74 +1,43 @@
 import * as React from 'react';
 import './-gen/app.css';
-import { DragWrangler, IItemSidebar } from './draggables';
-import { Container, Draggable, DropResult } from "react-smooth-dnd";
+import { DragWrangler, DragObjectHolder } from './draggables';
+//import { Container, Draggable, DropResult } from "react-smooth-dnd";
 import * as Fbemit from 'fbemitter';
 
 class SidePanel extends React.Component {
-    state = { Elem_Sidebar: Array<IItemSidebar>() };
-
-    constructor(prop: any) {
-        super(prop);
-        this.onSideBarDrop = this.onSideBarDrop.bind(this);
-        this.getChildPayload = this.getChildPayload.bind(this);
-    }
+    state = { Side_Panel_UUID : "" };
 
     Draggables_Subscription_Sidebar_Any: Fbemit.EventSubscription;
 
     componentDidMount() {
         let self = this;
-        this.Draggables_Subscription_Sidebar_Any = DragWrangler.Events_Sidebar.addListener(DragWrangler.Event_Name_Sidebar_Any, function () { self.update_bar() });
-        this.update_bar();
+        this.Draggables_Subscription_Sidebar_Any = DragWrangler.Events_Side_Panel.addListener(DragWrangler.Event_Name_Side_Panel_UUID,
+            function (data: any) {
+                console.log(data);
+                if (data.set_uuid !== undefined)
+                    self.setState({ Side_Panel_UUID : data.set_uuid });
+            }
+        );
     }
 
     componentWillUnmount() {
         this.Draggables_Subscription_Sidebar_Any.remove();
     }
 
-    update_bar() {
-        this.setState({ Elem_Sidebar: DragWrangler.Elem_Sidebar.slice() });
-    }
-
     render() {
+        if (this.state.Side_Panel_UUID == "") {
+            return (<div className="side-panel loading">loading</div>);
+        }
+
         return (
             <div className="side-panel">
-                <div className="dnd">
-                    <Container
-                        orientation="vertical"
-                        onDragStart={e => console.log("drag started", e)}
-                        onDragEnd={e => console.log("drag end", e)}
-                        onDrop={e => this.onSideBarDrop(e)}
-                        getChildPayload={index =>
-                            this.getChildPayload(index)
-                        }
-                        dropPlaceholder={{
-                            animationDuration: 100,
-                            showOnTop: true,
-                            className: 'icon-drop-preview'
-                        }}
-                    >
-                        {this.state.Elem_Sidebar.map(item => {
-                            return (
-                                <Draggable key={item.UUID}>
-                                    {item.render_as_icon()}
-                                </Draggable>
-                            )}
-                        )}
-                    </Container>
+                <div className="persistent panel small">
+                    <DragObjectHolder key={this.state.Side_Panel_UUID} object_uuid={this.state.Side_Panel_UUID} parent_uuid="" mode="panel-small" />
                 </div>
             </div>
         );
-    }
 
-    getChildPayload(index: number): any {
-        return {
-            origin: DragWrangler.Elem_Name_Sidebar,
-            item: this.state.Elem_Sidebar[index]
-        }
-    }
-
-    onSideBarDrop(result: DropResult) {
-        DragWrangler.move_onto_sidebar(result);
+        return (<div>hello</div>);
     }
 }
 

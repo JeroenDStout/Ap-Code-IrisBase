@@ -177,6 +177,7 @@
     <ClInclude Include="..\Pubc\Interface Layouts.h" />
     <ClInclude Include="..\Pubc\Iris Objectman.h" />
     <ClInclude Include="..\Pubc\Iris Objects.h" />
+    <ClInclude Include="..\Pubc\Layouts Protocol.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +196,7 @@
   <ItemGroup>
     <None Include="../Meta/contributors.json" />
     <None Include="../Meta/libraries.json" />
+    <None Include="..\Pub_ts\Layouts Protocol.ts" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Iris Backend.rc" />
