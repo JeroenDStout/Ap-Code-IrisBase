@@ -156,6 +156,7 @@ export class Socketman {
 
     static open_conduit(instr: ConduitOpenInstr): ISocketConduit {
         let conduit = new SocketConduit();
+        let self = this;
 
             // Find open socket
         let socket = this.Open_Sockets.get(instr.host_name);
@@ -177,7 +178,8 @@ export class Socketman {
             }
             conduit.Is_Currently_Open = true;
             conduit.Has_Been_Closed = false;
-            console.log("Conduit open... ", msg);
+            self.Current_Conduits.set(conduit.Original_Handler.message_id, conduit);
+            console.log("Conduit open... ", self.Current_Conduits, msg);
             conduit.Recipient_ID = msg.Reply_To_Me_ID;
             instr.on_success(msg);
         }
@@ -238,6 +240,18 @@ export class Socketman {
         if (handler.one_time_use) {
             this.Pending_Handlers.delete(msg.Recipient_ID);
         }
+    }
+
+    static deliver_to_conduit(msg: WsMsg.Message) {
+        let _handler = this.Current_Conduits.get(msg.Recipient_ID);
+        if (_handler === undefined) {
+            throw "Unknown handler requested as recipient ID: " + msg.Recipient_ID;
+        }
+
+        let handler = _handler as SocketConduit;
+        console.log(handler);
+
+        handler.on_receive_message(msg);
     }
 
     static fetch_connexion_enum() {
@@ -361,6 +375,9 @@ export class Socketman {
                 
                 if (msg.get_is_response()) {
                     self.deliver_to_response_handler(msg);
+                }
+                else {
+                    self.deliver_to_conduit(msg);
                 }
             };
         }

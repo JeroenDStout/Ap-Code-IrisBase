@@ -10,6 +10,7 @@
 #include "BlackRoot/Pubc/Sys Alert.h"
 
 #include "Conduits/Pubc/Base Conduit.h"
+#include "Conduits/Pubc/Disposable Message.h"
 
 #include "ToolboxBase/Pubc/Interface Environment.h"
 
@@ -27,6 +28,7 @@ CON_RMR_REGISTER_FUNC(Layouts, ping);
 CON_RMR_REGISTER_FUNC(Layouts, conduit_connect_layouts);
 CON_RMR_REGISTER_FUNC(Layouts, get_uuid_for_name);
 CON_RMR_REGISTER_FUNC(Layouts, get_state_for_uuids);
+CON_RMR_REGISTER_FUNC(Layouts, update_state_for_uuid);
 
     //  Setup
     // --------------------
@@ -164,6 +166,9 @@ void Layouts::_conduit_connect_layouts(Conduits::Raw::IRelayMessage * msg) noexc
             msg->set_FAILED();
             return;
         }
+
+        this->Active_Conduits.push_back(r.Ref);
+
         this->Message_Nexus->manual_acknowledge_conduit(r.Ref,
             [&](Conduits::Raw::ConduitRef, const Conduits::ConduitUpdateInfo) {
             },
@@ -178,6 +183,25 @@ bool Layouts::async_relay_message(Conduits::Raw::IRelayMessage * msg) noexcept
 {
     this->Message_Nexus->async_add_ad_hoc_message(msg);
     return true;
+}
+
+    //  Manipulate
+    // --------------------
+
+void Layouts::internal_replace_children_from_command(const JSON json)
+{
+    using cout = BlackRoot::Util::Cout;
+
+    std::string str = json.dump();
+
+    for (auto ref : this->Active_Conduits) {
+        auto * msg = new Conduits::DisposableMessage();
+        msg->Path = "update_state_for_uuid";
+        msg->Message_Segments[0] = str;
+        msg->Response_Desire = Conduits::ResponseDesire::not_needed;
+        msg->sender_prepare_for_send();
+        this->Message_Nexus->send_on(ref, msg);
+    }
 }
 
     //  Settings
@@ -279,5 +303,19 @@ void Layouts::_get_state_for_uuids(Conduits::Raw::IRelayMessage *msg) noexcept
         msg->set_OK();
 
         return ret;
+    });
+}
+
+void Layouts::_update_state_for_uuid(Conduits::Raw::IRelayMessage *msg) noexcept
+{
+    savvy_try_wrap_read_json(msg, 0, [&](JSON request) {
+        DbAssertMsgFatal(request.is_object(), "Request must update object");
+            
+        auto type = request["type"];
+        if (type == "change-children") {
+            this->internal_replace_children_from_command(request);
+        }
+
+        msg->set_OK();
     });
 }

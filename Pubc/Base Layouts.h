@@ -29,6 +29,8 @@ namespace Base {
 
         std::thread              Conduit_Handler;
         Conduits::NexusHolder<>  Message_Nexus;
+        
+        std::vector<Conduits::Raw::ConduitRef>  Active_Conduits;
 
         Objects::Objectman       Objectman;
         std::vector<UUID>        DirtyObjects;
@@ -39,6 +41,8 @@ namespace Base {
         void internal_handle_conduit_layout_message(Conduits::Raw::ConduitRef, Conduits::Raw::IRelayMessage*);
 
         void internal_ensure_objectman_elements();
+
+        void internal_replace_children_from_command(const JSON);
 	public:
         ~Layouts() override { ; }
         
@@ -63,6 +67,7 @@ namespace Base {
         CON_RMR_DECLARE_FUNC(conduit_connect_layouts);
         CON_RMR_DECLARE_FUNC(get_uuid_for_name);
         CON_RMR_DECLARE_FUNC(get_state_for_uuids);
+        CON_RMR_DECLARE_FUNC(update_state_for_uuid);
 	};
 
 }

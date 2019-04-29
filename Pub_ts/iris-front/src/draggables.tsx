@@ -133,7 +133,7 @@ export class DragWrangler {
             // Send a message which will perform
             // this update on the server side
         let msg = new WsMsg.Message();
-        msg.String = "update_item";
+        msg.String = "update_state_for_uuid";
         msg.Segments.set(0, (new TextEncoder()).encode(JSON.stringify(update)));
         msg.set_requires_repsonse(false);
         
@@ -145,6 +145,7 @@ export class DragWrangler {
             // Pretend iris immediately responsed
             // i.e., client side prediction
         this.schedule_iris_update(update);
+        this.try_apply_iris_updates();
     }
 
     static try_apply_iris_updates()
@@ -155,6 +156,8 @@ export class DragWrangler {
 
         for (let i = 0; i < this.Pending_Updates.length; i++) {
             let item:any = this.Pending_Updates[i];
+
+            console.log(item);
             
             let _obj = this.find_by_uuid(item.uuid);
             if (_obj === undefined) {
@@ -199,6 +202,9 @@ export class DragWrangler {
             if (item.type == "change-children") {
                 console.log("DragWrangler: Change children", item);
                 
+                    // Technically we should only care about the
+                    // slient key (rather than children), but we
+                    // trust the server implicitly and just copy
                 this.make_children_orphan(item);
                 obj.Children_ID = item.children;
                 
@@ -284,7 +290,7 @@ export class DragWrangler {
 
         new_child_id.splice(e.addedIndex as number, 0, e.payload as string);
         
-        this.send_iris_update( { type: "change-children", uuid: parent.ID, children: new_child_id });
+        this.send_iris_update( { type: "change-children", uuid: parent.ID, children: new_child_id, salient: [  e.payload ] });
         this.try_apply_iris_updates();
     }
 
@@ -344,6 +350,12 @@ export class DragWrangler {
 
             this.Conduit_Iris = Socketman.open_conduit(instr);
             this.Conduit_Iris.on_receive_message = function (msg: WsMsg.Message) {
+                if (msg.String == "update_state_for_uuid") {
+                    console.log("update", msg);
+                    self.schedule_iris_update(JSON.parse((new TextDecoder('utf-8')).decode(msg.Segments.get(0))));
+                    self.try_apply_iris_updates();
+                    return;
+                }
                 console.log("Draggables receive message", msg);
             }
             this.Conduit_Iris.on_receive_info = function (info: ConduitInfo) {
