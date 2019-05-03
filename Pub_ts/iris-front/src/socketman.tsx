@@ -1,6 +1,8 @@
 import * as Fbemit from 'fbemitter';
 import * as WsWH   from './-ex-ts/Websocket Protocol What-ho'
 import * as WsMsg  from './-ex-ts/Websocket Protocol Messages'
+const { detect } = require('detect-browser');
+const browser = detect();
 
 class Socket {
     host_name: string;
@@ -142,7 +144,7 @@ export class Socketman {
 
         let res_handler: SocketResponseHandler|undefined = undefined;
 
-        if (instr.message.get_requires_response()) {
+        if (instr.message.get_accepts_response()) {
             res_handler = this.create_response_handler(socket as Socket);
             res_handler.on_success = instr.on_success;
             res_handler.on_failure = instr.on_failure;
@@ -180,7 +182,7 @@ export class Socketman {
             conduit.Has_Been_Closed = false;
             self.Current_Conduits.set(conduit.Original_Handler.message_id, conduit);
             console.log("Conduit open... ", self.Current_Conduits, msg);
-            conduit.Recipient_ID = msg.Reply_To_Me_ID;
+            conduit.Recipient_ID = msg.Opened_Conduit_ID;
             instr.on_success(msg);
         }
         conduit.Original_Handler.on_failure = function (msg: WsMsg.Message) {
@@ -230,7 +232,7 @@ export class Socketman {
 
         let handler = _handler as SocketResponseHandler;
 
-        if (msg.get_has_succeeded()) {
+        if (msg.get_is_OK()) {
             handler.on_success(msg);
         }
         else {
@@ -309,7 +311,7 @@ export class Socketman {
                 state.welcomed = false;
 
                 let prop = new WsWH.ClientProperties;
-                prop.Client_Name = "Iris Web (" + navigator.userAgent + ")";
+                prop.Client_Name = "Iris Web (" + browser.name + ")";
                 prop.Client_Version = "v0.0.1"
 
                 ws.send(WsWH.create_what_ho_message(prop));
@@ -353,14 +355,14 @@ export class Socketman {
                         // Debug: send rq for stats!
                     let msg = new WsMsg.Message();
                     msg.String            = "stats";
-                    msg.set_requires_repsonse(true);
+                    msg.set_accepts_response(true);
 
                     let instr = new SocketSendInstr();
                     instr.host_name = state.host_name;
                     instr.message   = msg;
 
                     instr.on_success = function (s_msg: WsMsg.Message) {
-                        console.log("Asked " + state.host_long_name + " for stats:", s_msg.get_segment_as_json(0));
+                        console.log("Asked " + state.host_long_name + " for stats:", s_msg.get_segment_as_json(""));
                     }
                     instr.on_failure = function (s_msg: WsMsg.Message) {
                         console.log("Asked " + state.host_long_name + " for stats, but got failure: ", s_msg.String);

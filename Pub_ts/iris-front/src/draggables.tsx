@@ -70,13 +70,13 @@ export class DragWrangler {
 
         let msg = new WsMsg.Message();
         msg.String = "get_uuid_for_name";
-        msg.Segments.set(0, (new TextEncoder()).encode(JSON.stringify({ "name" : LayProt.Protocol.Name_User_Persistent_Panel })));
-        msg.set_requires_repsonse(true);
+        msg.Segments.set("", (new TextEncoder()).encode(JSON.stringify({ "name" : LayProt.Protocol.Name_User_Persistent_Panel })));
+        msg.set_accepts_response(true);
         console.log(msg);
 
         let instr = new SocketSendInstr();
         instr.on_success = function (msg: WsMsg.Message) {
-            let dec = JSON.parse((new TextDecoder('utf-8')).decode(msg.Segments.get(0)));
+            let dec = JSON.parse((new TextDecoder('utf-8')).decode(msg.Segments.get("")));
 
             let uuid = dec["uuid"];
             if (typeof (uuid) != 'string') {
@@ -101,12 +101,12 @@ export class DragWrangler {
 
         let msg = new WsMsg.Message();
         msg.String = "get_state_for_uuids";
-        msg.Segments.set(0, (new TextEncoder()).encode(JSON.stringify(ids)));
-        msg.set_requires_repsonse(true);
+        msg.Segments.set("", (new TextEncoder()).encode(JSON.stringify(ids)));
+        msg.set_accepts_response(true);
         
         let instr = new SocketSendInstr();
         instr.on_success = function (msg: WsMsg.Message) {
-            let dec = JSON.parse((new TextDecoder('utf-8')).decode(msg.Segments.get(0)));
+            let dec = JSON.parse((new TextDecoder('utf-8')).decode(msg.Segments.get("")));
             console.log(dec);
 
             for (let result in dec){
@@ -134,8 +134,8 @@ export class DragWrangler {
             // this update on the server side
         let msg = new WsMsg.Message();
         msg.String = "update_state_for_uuid";
-        msg.Segments.set(0, (new TextEncoder()).encode(JSON.stringify(update)));
-        msg.set_requires_repsonse(false);
+        msg.Segments.set("", (new TextEncoder()).encode(JSON.stringify(update)));
+        msg.set_accepts_response(false);
         
         let instr = new SocketSendInstr();
         instr.message = msg;
@@ -150,6 +150,9 @@ export class DragWrangler {
 
     static try_apply_iris_updates()
     {
+        if (this.Suspend_Because_Of_Dragging)
+            return;
+
         console.log("DragWrangler: Applying iris updates", this.Pending_Updates);
 
         let new_ids = Array<string>();
@@ -338,7 +341,7 @@ export class DragWrangler {
 
             let msg = new WsMsg.Message();
             msg.String            = "lay/conduit_connect_layouts";
-            msg.set_requires_repsonse(true);
+            msg.set_accepts_response(true);
 
             let instr = new ConduitOpenInstr();
             instr.host_name  = "ir";
@@ -352,7 +355,7 @@ export class DragWrangler {
             this.Conduit_Iris.on_receive_message = function (msg: WsMsg.Message) {
                 if (msg.String == "update_state_for_uuid") {
                     console.log("update", msg);
-                    self.schedule_iris_update(JSON.parse((new TextDecoder('utf-8')).decode(msg.Segments.get(0))));
+                    self.schedule_iris_update(JSON.parse((new TextDecoder('utf-8')).decode(msg.Segments.get(""))));
                     self.try_apply_iris_updates();
                     return;
                 }
