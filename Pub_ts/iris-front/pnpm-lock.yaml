@@ -1,5 +1,6 @@
 dependencies:
   babel-runtime: 6.26.0
+  detect-browser: 4.5.0
   enhanced-resolve: 4.1.0
   fbemitter: 2.1.1
   prop-types: 15.7.2
@@ -2278,6 +2279,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
+  /detect-browser/4.5.0:
+    dev: false
+    resolution:
+      integrity: sha512-uwyZNBwMhvRIOBIBTuDu+h4/a2bfFE/elUIvAOuKuBZcuy6yAJ/9dOe4r3wyWO/ZW2PcsP0dhEwiVwTPTTJp2Q==
   /detect-indent/4.0.0:
     dependencies:
       repeating: 2.0.1
@@ -8625,6 +8630,7 @@ specifiers:
   '@types/react': ^16.8.13
   '@types/react-dom': ^16.8.4
   babel-runtime: 6.26.0
+  detect-browser: ^4.5.0
   enhanced-resolve: 4.1.0
   fbemitter: 2.1.1
   prop-types: ^15.5.7
