@@ -35,9 +35,12 @@ CON_RMR_REGISTER_FUNC(Layouts, update_state_for_uuid);
 
 void Layouts::initialise(const JSON param)
 {
-    this->Message_Nexus->set_ad_hoc_message_handling([=](Conduits::Raw::ConduitRef, Conduits::Raw::IRelayMessage * msg){
-        this->rmr_handle_message_immediate_and_release(msg);
-    });
+    this->Message_Nexus->set_ad_hoc_message_handling(
+        std::bind(&Layouts::rmr_handle_message_immediate_and_release, this, std::placeholders::_1)
+    );
+
+    this->Message_Nexus->start_accepting_threads();
+    this->Message_Nexus->start_accepting_messages();
 
     this->Objectman.initialise();
 }
@@ -132,7 +135,7 @@ void Layouts::internal_ensure_objectman_elements()
     //  Handle
     // --------------------
 
-void Layouts::internal_handle_conduit_layout_message(Conduits::Raw::ConduitRef, Conduits::Raw::IRelayMessage * msg)
+void Layouts::internal_handle_conduit_layout_message(Conduits::Raw::ConduitRef, Conduits::Raw::IMessage * msg)
 {
     this->rmr_handle_message_immediate_and_release(msg);
 }
@@ -154,32 +157,41 @@ void Layouts::update_connexion_enumeration()
     this->internal_ensure_objectman_elements();
 }
 
-void Layouts::_conduit_connect_layouts(Conduits::Raw::IRelayMessage * msg) noexcept
+void Layouts::_conduit_connect_layouts(Conduits::Raw::IMessage * msg) noexcept
 {
     using cout = BlackRoot::Util::Cout;
 
     cout{} << "Connect";
 
+        // The handler which will deal with success / faiulre
     Conduits::FunctionOpenConduitHandler handler([&](Conduits::FunctionOpenConduitHandler::Result r){
         if (!r.Is_Success) {
-            msg->set_response_string_with_copy("Opening conduit failed");
-            msg->set_FAILED();
+            msg->set_FAILED(Conduits::Raw::FailState::failed_no_conduit);
             return;
         }
 
+            // Add to active list and add an update funciton which will
+            // handle the eventuality where the conduit is closed
         this->Active_Conduits.push_back(r.Ref);
 
         this->Message_Nexus->manual_acknowledge_conduit(r.Ref,
-            [&](Conduits::Raw::ConduitRef, const Conduits::ConduitUpdateInfo) {
+            [this](Conduits::Raw::ConduitRef ref, const Conduits::ConduitUpdateInfo info) {
+                if (info.State == Conduits::ConduitState::closed) {
+                    auto elem = std::find(this->Active_Conduits.begin(), this->Active_Conduits.end(), ref);
+                    if (elem != this->Active_Conduits.end()) {
+                        this->Active_Conduits.erase(elem);
+                    }
+                }
             },
             std::bind(&Layouts::internal_handle_conduit_layout_message, this, std::placeholders::_1, std::placeholders::_2)
         );
-        msg->set_OK_opened_conduit();
+
+        msg->set_OK(Conduits::Raw::OKState::ok_opened_conduit);
     });
     msg->open_conduit_for_sender(this->Message_Nexus, &handler);
 }
 
-bool Layouts::async_relay_message(Conduits::Raw::IRelayMessage * msg) noexcept
+bool Layouts::async_relay_message(Conduits::Raw::IMessage * msg) noexcept
 {
     this->Message_Nexus->async_add_ad_hoc_message(msg);
     return true;
@@ -192,15 +204,15 @@ void Layouts::internal_replace_children_from_command(const JSON json)
 {
     using cout = BlackRoot::Util::Cout;
 
-    std::string str = json.dump();
+        // TODO: change the state server-side
 
+        // Broadcast this event to all conduits
     for (auto ref : this->Active_Conduits) {
-        auto * msg = new Conduits::DisposableMessage();
-        msg->Path = "update_state_for_uuid";
-        msg->Message_Segments[0] = str;
-        msg->Response_Desire = Conduits::ResponseDesire::not_needed;
-        msg->sender_prepare_for_send();
-        this->Message_Nexus->send_on(ref, msg);
+        std::unique_ptr<Conduits::DisposableMessage> reply(new Conduits::DisposableMessage());
+        reply->Message_String = "update_state_for_uuid";
+        reply->Segment_Map[""] = json.dump();
+        reply->sender_prepare_for_send();
+        this->Message_Nexus->send_on_conduit(ref, reply.release());
     }
 }
 
@@ -237,7 +249,7 @@ Layouts::Path Layouts::get_setup_dir()
     //  Message
     // --------------------
 
-void Layouts::_ping(Conduits::Raw::IRelayMessage * msg) noexcept
+void Layouts::_ping(Conduits::Raw::IMessage * msg) noexcept
 {
     using cout = BlackRoot::Util::Cout;
     cout{} << "Iris layouts says 'pong'!" << std::endl;
@@ -245,26 +257,20 @@ void Layouts::_ping(Conduits::Raw::IRelayMessage * msg) noexcept
     BlackRoot::System::PlayAdHocSound(Toolbox::Core::Get_Environment()->get_ref_dir() / "Data/ping.wav");
     BlackRoot::System::FlashCurrentWindow();
 
-    this->savvy_try_wrap_write_json(msg, 0, [&] {
-        JSON ret = { "Iris Layouts says 'pong'" };
+        // Reply with an acknowledgement
+    this->savvy_try_wrap(msg, [&] {
+        std::unique_ptr<Conduits::DisposableMessage> reply(new Conduits::DisposableMessage());
+        reply->Message_String = "Iris Layouts says 'pong'";
+        reply->sender_prepare_for_send();
+
+        msg->set_response(reply.release());
         msg->set_OK();
-        return ret;
     });
 }
 
-void Layouts::_commence(Conduits::Raw::IRelayMessage *) noexcept
+void Layouts::_get_uuid_for_name(Conduits::Raw::IMessage *msg) noexcept
 {
-    this->commence();
-}
-
-void Layouts::_end_and_wait(Conduits::Raw::IRelayMessage *) noexcept
-{
-    this->end_and_wait();
-}
-
-void Layouts::_get_uuid_for_name(Conduits::Raw::IRelayMessage *msg) noexcept
-{
-    savvy_try_wrap_read_write_json(msg, 0, 0, [&](JSON request) {
+    savvy_try_wrap_read_json(msg, "", [&](JSON request) {
         auto & it = request.find("name");
         DbAssertMsgFatal(it != request.end(), "No name was specified");
 
@@ -279,16 +285,21 @@ void Layouts::_get_uuid_for_name(Conduits::Raw::IRelayMessage *msg) noexcept
         else {
             ret["uuid"] = BlackRoot::Identify::UUID_To_String(obj->ID);
         }
-
+        
+        std::unique_ptr<Conduits::DisposableMessage> reply(new Conduits::DisposableMessage());
+        reply->Segment_Map[""] = ret.dump();
+        reply->sender_prepare_for_send();
+        
+        msg->set_response(reply.release());
         msg->set_OK();
 
         return ret;
     });
 }
 
-void Layouts::_get_state_for_uuids(Conduits::Raw::IRelayMessage *msg) noexcept
+void Layouts::_get_state_for_uuids(Conduits::Raw::IMessage *msg) noexcept
 {
-    savvy_try_wrap_read_write_json(msg, 0, 0, [&](JSON request) {
+    savvy_try_wrap_read_json(msg, "", [&](JSON request) {
         DbAssertMsgFatal(request.is_array(), "Request must be array of string uuids");
         
         JSON ret;
@@ -299,14 +310,19 @@ void Layouts::_get_state_for_uuids(Conduits::Raw::IRelayMessage *msg) noexcept
             std::string uuid = elem.get<std::string>();
             ret[uuid] = this->Objectman.get_json(*BlackRoot::Identify::UUID::from_string(uuid));
         }
-
+        
+        std::unique_ptr<Conduits::DisposableMessage> reply(new Conduits::DisposableMessage());
+        reply->Segment_Map[""] = ret.dump();
+        reply->sender_prepare_for_send();
+        
+        msg->set_response(reply.release());
         msg->set_OK();
 
         return ret;
     });
 }
 
-void Layouts::_update_state_for_uuid(Conduits::Raw::IRelayMessage *msg) noexcept
+void Layouts::_update_state_for_uuid(Conduits::Raw::IMessage *msg) noexcept
 {
     savvy_try_wrap_read_json(msg, 0, [&](JSON request) {
         DbAssertMsgFatal(request.is_object(), "Request must update object");

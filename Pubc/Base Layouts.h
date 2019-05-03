@@ -38,7 +38,7 @@ namespace Base {
 		Connexion::ConnexionEnumerator	Connextion_Enum;
 
         void internal_conduit_handler();
-        void internal_handle_conduit_layout_message(Conduits::Raw::ConduitRef, Conduits::Raw::IRelayMessage*);
+        void internal_handle_conduit_layout_message(Conduits::Raw::ConduitRef, Conduits::Raw::IMessage*);
 
         void internal_ensure_objectman_elements();
 
@@ -54,7 +54,7 @@ namespace Base {
 
 		void update_connexion_enumeration();
 		
-        bool async_relay_message(Conduits::Raw::IRelayMessage*) noexcept;
+        bool async_relay_message(Conduits::Raw::IMessage*) noexcept;
 
         virtual void set_setup_dir(const Path);
         virtual Path get_setup_dir();
@@ -62,8 +62,6 @@ namespace Base {
 		JSON get_connexion_enumeration() const override;
         
         CON_RMR_DECLARE_FUNC(ping);
-        CON_RMR_DECLARE_FUNC(commence);
-        CON_RMR_DECLARE_FUNC(end_and_wait);
         CON_RMR_DECLARE_FUNC(conduit_connect_layouts);
         CON_RMR_DECLARE_FUNC(get_uuid_for_name);
         CON_RMR_DECLARE_FUNC(get_state_for_uuids);

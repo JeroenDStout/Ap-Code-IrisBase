@@ -62,7 +62,7 @@ void Environment::internal_compile_stats(JSON & json)
     this->RelayReceiverBaseClass::internal_compile_stats(json);
 }
 
-void Environment::internal_handle_web_request(std::string path, Conduits::Raw::IRelayMessage * msg)
+void Environment::internal_handle_web_request(std::string path, Conduits::Raw::IMessage * msg)
 {
 		// all command paths over http end in 'http'; i.e., an empty
 		// path is represented by 'http', which we want to forward
@@ -72,10 +72,14 @@ void Environment::internal_handle_web_request(std::string path, Conduits::Raw::I
 	}
 	else if (path == "iris/connexions.json/http") {
         DbAssertMsgFatal(this->Layouts, "Layouts has not been loaded");
-		auto & header = JSON({ "Content-Type", "application/json" }).dump();
-		auto & connexions = this->Layouts->get_connexion_enumeration().dump();
-		msg->set_response_segment_with_copy(0, { header.length(), (void*)header.c_str() });
-		msg->set_response_segment_with_copy(1, { connexions.length(), (void*)connexions.c_str() });
+
+        std::unique_ptr<Conduits::DisposableMessage> reply(new Conduits::DisposableMessage());
+        reply->Segment_Map["header"] = JSON({ "Content-Type", "application/json" }).dump();
+        reply->Segment_Map["body"]   = this->Layouts->get_connexion_enumeration().dump();
+
+        reply->sender_prepare_for_send();
+
+        msg->set_response(reply.release());
 		msg->set_OK();
 		return;
 	}
@@ -94,7 +98,7 @@ ILayouts * Environment::internal_allocate_layouts()
     //  Messages
     // --------------------
 
-void Environment::_create_layouts(Conduits::Raw::IRelayMessage * msg) noexcept
+void Environment::_create_layouts(Conduits::Raw::IMessage * msg) noexcept
 {
     this->savvy_try_wrap(msg, [&] {
         DbAssertMsgFatal(!this->Layouts, "Layouts already exists");

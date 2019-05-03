@@ -20,7 +20,7 @@ namespace Core {
             // Web
 		
         std::string internal_get_favicon_name() override { return "iris_favicon.ico"; }
-		void internal_handle_web_request(std::string path, Conduits::Raw::IRelayMessage *) override;
+		void internal_handle_web_request(std::string path, Conduits::Raw::IMessage *) override;
 
             // Typed
         

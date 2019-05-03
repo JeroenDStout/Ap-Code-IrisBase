@@ -27,7 +27,7 @@ namespace Core {
         virtual void commence() = 0;
         virtual void end_and_wait() = 0;
 
-        virtual bool async_relay_message(Conduits::Raw::IRelayMessage*) noexcept = 0;
+        virtual bool async_relay_message(Conduits::Raw::IMessage*) noexcept = 0;
 
 		virtual JSON get_connexion_enumeration() const = 0;
 
