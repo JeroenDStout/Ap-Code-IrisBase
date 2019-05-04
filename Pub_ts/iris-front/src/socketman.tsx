@@ -1,6 +1,7 @@
 import * as Fbemit from 'fbemitter';
 import * as WsWH   from './-ex-ts/Websocket Protocol What-ho'
 import * as WsMsg  from './-ex-ts/Websocket Protocol Messages'
+import * as WsSh   from './-ex-ts/Websocket Protocol Shared'
 const { detect } = require('detect-browser');
 const browser = detect();
 
@@ -312,7 +313,7 @@ export class Socketman {
 
                 let prop = new WsWH.ClientProperties;
                 prop.Client_Name = "Iris Web (" + browser.name + ")";
-                prop.Client_Version = "v0.0.1"
+                prop.Client_Version = WsSh.Protocol.Version;
 
                 ws.send(WsWH.create_what_ho_message(prop));
             };
