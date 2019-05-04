@@ -36,6 +36,10 @@ namespace Objects {
         const Object * create(UUID parent, std::string type_name, JSON description);
         const Object * replace(UUID current, std::string type_name, JSON description);
 
+        const Object * create_empty(UUID id);
+
+        const Object * replace_children(UUID object, const std::vector<UUID>);
+
         JSON           get_json(UUID);
     };
 

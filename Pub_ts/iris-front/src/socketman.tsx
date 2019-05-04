@@ -136,6 +136,8 @@ export class Socketman {
 
     static send_message_on_socket(instr:SocketSendInstr): ISocketResponseHandler|undefined
     {
+        console.log("##################", instr);
+
             // Find open socket
         let socket = this.Open_Sockets.get(instr.host_name);
         if (socket == undefined) {

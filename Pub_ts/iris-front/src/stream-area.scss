@@ -1,9 +1,11 @@
 @import 'setup';
 
-.stream-space {
+.loadout-desk {
     position: absolute;
-    left: 0px; right: 0px;
-    top: 0px; bottom: 0px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
     overflow: hidden;
     background: rgba(89,69,41,1);
     background: -moz-linear-gradient(top, rgba(89,69,41,1) 0%, rgba(66,54,38,1) 19%, rgba(41,37,30,1) 61%, rgba(26,18,14,1) 100%);
@@ -13,56 +15,81 @@
     background: -ms-linear-gradient(top, rgba(89,69,41,1) 0%, rgba(66,54,38,1) 19%, rgba(41,37,30,1) 61%, rgba(26,18,14,1) 100%);
     background: linear-gradient(to bottom, rgba(89,69,41,1) 0%, rgba(66,54,38,1) 19%, rgba(41,37,30,1) 61%, rgba(26,18,14,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#594529', endColorstr='#1a120e', GradientType=0 );
-}
 
-.stream-space .stream-carrier {
-    position: absolute;
-    left: $side-panel-image-size + 12px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-
-    .carrier {
+    .streams-area {
         position: absolute;
-        left: 0px;
+        left: $panel-small-size;
         right: 0px;
         top: 0px;
         bottom: 0px;
-        display: flex;
-        justify-content: left;
-        overflow-x: scroll;
 
-        .stream-holder {
-            width: 350px;
-            height: 100%;
-            box-sizing: border-box;
-            padding: 4px 2px 8px 2px;
+        .dnd {
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            top: 0px;
+            bottom: 0px;
+
+            .smooth-dnd-container {
+                height: 100%;
+            }
 
             .stream {
-                width: 100%;
+                border-radius: 4px;
+                -webkit-box-shadow: inset 0px 7px 21px 4px rgba(0,23,71,0.23);
+                box-shadow: inset 0px 7px 21px 4px rgba(0,23,71,0.23);
+                min-width: 300px;
                 height: 100%;
-                border: 1px solid black;
-                box-sizing: border-box;
-                border-radius: 3px;
-                background: rgba(56,42,35,1);
-                background: -moz-linear-gradient(top, rgba(56,42,35,1) 0%, rgba(46,40,33,1) 19%, rgba(46,44,40,1) 61%, rgba(28,25,24,1) 100%);
-                background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(56,42,35,1)), color-stop(19%, rgba(46,40,33,1)), color-stop(61%, rgba(46,44,40,1)), color-stop(100%, rgba(28,25,24,1)));
-                background: -webkit-linear-gradient(top, rgba(56,42,35,1) 0%, rgba(46,40,33,1) 19%, rgba(46,44,40,1) 61%, rgba(28,25,24,1) 100%);
-                background: -o-linear-gradient(top, rgba(56,42,35,1) 0%, rgba(46,40,33,1) 19%, rgba(46,44,40,1) 61%, rgba(28,25,24,1) 100%);
-                background: -ms-linear-gradient(top, rgba(56,42,35,1) 0%, rgba(46,40,33,1) 19%, rgba(46,44,40,1) 61%, rgba(28,25,24,1) 100%);
-                background: linear-gradient(to bottom, rgba(56,42,35,1) 0%, rgba(46,40,33,1) 19%, rgba(46,44,40,1) 61%, rgba(28,25,24,1) 100%);
-                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#382a23', endColorstr='#1c1918', GradientType=0 );
-                padding: 5px;
-                font-size: 1.2em;
-                font-family: SGGolden;
-                color: white;
+                background: #3d2d16; /* Old browsers */
+                background: -moz-linear-gradient(-45deg, #3d2d16 0%, #140f05 100%); /* FF3.6-15 */
+                background: -webkit-linear-gradient(-45deg, #3d2d16 0%,#140f05 100%); /* Chrome10-25,Safari5.1-6 */
+                background: linear-gradient(135deg, #3d2d16 0%,#140f05 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3d2d16', endColorstr='#140f05',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+                display: flex;
+                flex-direction: column;
+
+                > .top {
+                    height: 30px;
+                }
+
+                > .stream-widget-dnd {
+                    margin: 2px;
+                    background: #825b2e; /* Old browsers */
+                    background: -moz-linear-gradient(-45deg, #825b2e 0%, #3f3521 100%); /* FF3.6-15 */
+                    background: -webkit-linear-gradient(-45deg, #825b2e 0%,#3f3521 100%); /* Chrome10-25,Safari5.1-6 */
+                    background: linear-gradient(135deg, #825b2e 0%,#3f3521 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#825b2e', endColorstr='#3f3521',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+                    min-height: 10px;
+                }
+
+                > .stream-message-dnd {
+                    flex: 1;
+                }
             }
         }
 
-        .stream-holder.dragged .stream {
-            -webkit-box-shadow: 0px 10px 33px 0px rgba(43,34,43,1);
-            -moz-box-shadow: 0px 10px 33px 0px rgba(43,34,43,1);
-            box-shadow: 0px 10px 33px 0px rgba(43,34,43,1);
+        .no-implement {
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0px 0px 0px 2px rgba(0,22,54,0.5);
+            -moz-box-shadow: inset 0px 0px 0px 2px rgba(0,22,54,0.5);
+            box-shadow: inset 0px 0px 0px 2px rgba(0,22,54,0.5);
+            background-image: url("../-ex-res/element_none.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: .5;
+            height: 100%;
         }
     }
+}
+
+.stream-widget-dnd .widget {
+    -moz-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
+    -webkit-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
+    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
+    min-height: 30px;
+}
+
+.smooth-dnd-ghost {
+    width: 50px;
+    height: 50px;
 }

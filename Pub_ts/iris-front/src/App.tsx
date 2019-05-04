@@ -3,6 +3,7 @@ import './-gen/app.css';
 
 import { Socketman } from './socketman';
 import SidePanel from './side-panel';
+import LoadoutDesk from './loadout-desk';
 import { DragWrangler } from './draggables';
 import './draggable-common';
 
@@ -28,6 +29,7 @@ class App extends React.Component {
 
         return (
             <div>
+                <LoadoutDesk/>
                 <SidePanel />
             </div>
         );

@@ -28,9 +28,6 @@
     <ClCompile Include="..\Pubc\Interface Layouts.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
-    <ClCompile Include="..\Pubc\Base Layouts.cpp">
-      <Filter>Environment</Filter>
-    </ClCompile>
     <ClCompile Include="..\Pubc\Connexion Enumerator.cpp">
       <Filter>Iris</Filter>
     </ClCompile>
@@ -38,6 +35,9 @@
       <Filter>Iris</Filter>
     </ClCompile>
     <ClCompile Include="..\Pubc\Iris Objectman.cpp">
+      <Filter>Iris</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Pubc\Base Layouts.cpp">
       <Filter>Iris</Filter>
     </ClCompile>
   </ItemGroup>
@@ -57,9 +57,6 @@
     <ClInclude Include="..\Pubc\Interface Layouts.h">
       <Filter>Environment</Filter>
     </ClInclude>
-    <ClInclude Include="..\Pubc\Base Layouts.h">
-      <Filter>Environment</Filter>
-    </ClInclude>
     <ClInclude Include="..\Pubc\Connexion Enumerator.h">
       <Filter>Iris</Filter>
     </ClInclude>
@@ -70,6 +67,9 @@
       <Filter>Iris</Filter>
     </ClInclude>
     <ClInclude Include="..\Pubc\Layouts Protocol.h">
+      <Filter>Iris</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Pubc\Base Layouts.h">
       <Filter>Iris</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './-gen/app.css';
 import { DragWrangler, DragObjectHolder } from './draggables';
-//import { Container, Draggable, DropResult } from "react-smooth-dnd";
 import * as Fbemit from 'fbemitter';
 
 class SidePanel extends React.Component {
@@ -36,8 +35,6 @@ class SidePanel extends React.Component {
                 </div>
             </div>
         );
-
-        return (<div>hello</div>);
     }
 }
 

@@ -5,6 +5,7 @@
 #include "BlackRoot/Pubc/Assert.h"
 
 #include "IrisBase/Pubc/Iris Objectman.h"
+#include "IrisBase/Pubc/Layouts Protocol.h"
 
 using namespace IrisBack::Objects;
 
@@ -43,7 +44,19 @@ void Objectman::give_name(UUID id, std::string name)
 const Object * Objectman::get(UUID id)
 {
     auto & it = this->Object_Map.find(id);
+    if (it == this->Object_Map.end())
+        return nullptr;
     return &it->second;
+}
+
+const Object * Objectman::create_empty(UUID id)
+{
+    Object & object = this->Object_Map[id];
+    object.ID = id;
+    object.Base_Type_Name = Objects::Protocol::Type_Dummy;
+    object.Parent_ID = {};
+
+    return &object;
 }
 
 const Object * Objectman::create(UUID parent_id, std::string type_name, JSON description)
@@ -76,6 +89,46 @@ const Object * Objectman::replace(UUID id, std::string type_name, JSON descripti
     obj->Object_Description = description;
 
     return obj;
+}
+
+const Object * Objectman::replace_children(UUID id, std::vector<UUID> children)
+{
+    for (auto & elem : children) {
+        Object * obj = this->internal_get(elem);
+        DbAssert(nullptr != obj);
+        
+        if (!obj->Parent_ID.is_nil()) {
+            Object * parent = this->internal_get(obj->Parent_ID);
+            DbAssert(nullptr != parent);
+
+                // Remove the element from any parent it may
+                // presently have
+            auto it = parent->Child_IDs.begin();
+            while (it != parent->Child_IDs.end()) {
+                if (*it != elem) {
+                    ++it;
+                    continue;
+                }
+                parent->Child_IDs.erase(it);
+                break;
+            }
+        }
+
+        obj->Parent_ID = id;
+    }
+    
+    Object * parent_obj = this->internal_get(id);
+    DbAssert(nullptr != parent_obj);
+
+    for (auto elem : parent_obj->Child_IDs) {
+        Object * obj = this->internal_get(elem);
+        DbAssert(nullptr != obj);
+        obj->Parent_ID = {};
+    }
+
+    parent_obj->Child_IDs = children;
+
+    return parent_obj;
 }
 
     //  JSON

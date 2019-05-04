@@ -15,7 +15,14 @@ namespace Protocol {
 
 	static const char * Name_User_Persistent_Panel  = "user-persistent-panel";
 
+    static const char * Name_Action_Update_Item     = "update-item";
+    static const char * Name_Action_Update_Children = "update-children";
+    static const char * Name_Action_Create_Item     = "create-item";
+
+	static const char * Type_Dummy                  = "dummy";
 	static const char * Type_Panel                  = "panel";
+	static const char * Type_Stream                 = "stream";
+	static const char * Type_Widget                 = "widget";
 	static const char * Type_Connexion              = "connexion";
 
 	static const char * Name_Connexion_Name         = "name";

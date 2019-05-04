@@ -41,8 +41,12 @@ namespace Base {
         void internal_handle_conduit_layout_message(Conduits::Raw::ConduitRef, Conduits::Raw::IMessage*);
 
         void internal_ensure_objectman_elements();
-
+        
+        void internal_create_object_from_command(const JSON);
+        void internal_update_object_from_command(const JSON);
         void internal_replace_children_from_command(const JSON);
+
+        const Objects::Object * internal_get_from_JSON_string_or_throw(const JSON);
 	public:
         ~Layouts() override { ; }
         

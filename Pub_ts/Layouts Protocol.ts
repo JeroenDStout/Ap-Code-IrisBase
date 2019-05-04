@@ -8,7 +8,12 @@
 export class Protocol {
 
 	static Name_User_Persistent_Panel  = "user-persistent-panel";
+    
+    static Name_Action_Update_Item     = 'update-item';
+    static Name_Action_Update_Children = 'update-children';
+    static Name_Action_Create_Item     = 'create-item';
 
+	static Type_Dummy                  = "dummy";
 	static Type_Panel                  = "panel";
 	static Type_Connexion              = "connexion";
 

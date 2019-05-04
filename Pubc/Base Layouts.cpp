@@ -130,6 +130,13 @@ void Layouts::internal_ensure_objectman_elements()
     }
 
     this->DirtyObjects.push_back(panel_id);
+
+    auto desk = this->Objectman.create({}, Objects::Protocol::Type_Dummy, {});
+    this->Objectman.give_name(desk->ID, "lo-default-default");
+    this->DirtyObjects.push_back(desk->ID);
+    
+    this->Objectman.create(desk->ID, Objects::Protocol::Type_Stream, {});
+    this->Objectman.create(desk->ID, Objects::Protocol::Type_Stream, {});
 }
 
     //  Handle
@@ -200,17 +207,159 @@ bool Layouts::async_relay_message(Conduits::Raw::IMessage * msg) noexcept
     //  Manipulate
     // --------------------
 
-void Layouts::internal_replace_children_from_command(const JSON json)
+void Layouts::internal_create_object_from_command(const JSON json)
 {
-    using cout = BlackRoot::Util::Cout;
+    const auto & id = json["uuid"];
+    DbAssertMsgFatal(id.is_string(), "\"uuid\" must be a string uuid");
 
-        // TODO: change the state server-side
+    auto uuid = UUID::from_string(id.get<std::string>());
+    DbAssertMsgFatal(uuid, "\"uuid\" was not a valid string uuid");
+    DbAssertMsgFatal(!uuid->is_nil(), "\"uuid\" may not be a nil uuid");
+
+    this->Objectman.create_empty(*uuid);
+}
+
+void Layouts::internal_update_object_from_command(const JSON json)
+{
+    auto obj = this->internal_get_from_JSON_string_or_throw(json["uuid"]);
+
+    std::string new_base_type_name = obj->Base_Type_Name;
+
+    auto it_type = json.find("base_type_name");
+    auto it_desc = json.find("desc");
+
+    obj = this->Objectman.replace(obj->ID,
+            (it_type != json.end() && it_type->is_string()) ? it_type->get<std::string>() : obj->Base_Type_Name,
+            (it_desc != json.end()) ? *it_desc : obj->Object_Description
+    );
+    
+    auto update_json = this->Objectman.get_json(obj->ID);
+    update_json["uuid"] = json["uuid"];
+
+    std::string update_string = update_json.dump();
 
         // Broadcast this event to all conduits
     for (auto ref : this->Active_Conduits) {
         std::unique_ptr<Conduits::DisposableMessage> reply(new Conduits::DisposableMessage());
         reply->Message_String = "update_state_for_uuid";
-        reply->Segment_Map[""] = json.dump();
+        reply->Segment_Map[""] = update_string;
+        reply->sender_prepare_for_send();
+        this->Message_Nexus->send_on_conduit(ref, reply.release());
+    }
+}
+
+void Layouts::internal_replace_children_from_command(const JSON json)
+{
+    using cout = BlackRoot::Util::Cout;
+    
+    const auto & children = json["children"];
+    DbAssertMsgFatal(children.is_array(), "\"children\" must be an array of string uuids");
+    const auto & salient = json["salient"];
+    DbAssertMsgFatal(salient.is_array(), "\"salient\" must be an array of string uuids");
+
+    auto obj = this->internal_get_from_JSON_string_or_throw(json["uuid"]);
+    
+    std::vector<UUID> ref_children;
+    std::vector<UUID> salient_children;
+    std::vector<UUID> new_children;
+
+        // Find and list the reference children
+    for (auto & elem : children) {
+        auto child_obj = this->internal_get_from_JSON_string_or_throw(elem);
+        ref_children.push_back(child_obj->ID);
+    }
+
+        // Find and list the salient children
+    for (auto & elem : salient) {
+        auto child_obj = this->internal_get_from_JSON_string_or_throw(elem);
+        salient_children.push_back(child_obj->ID);
+    }
+    
+        // Make a copied list of the object's children
+        // without the salient child objects
+    new_children = obj->Child_IDs;
+    decltype(new_children)::iterator it = new_children.begin();
+    while (it != new_children.end()) {
+        bool found = false;
+        for (auto elem : salient_children) {
+            if (*it != elem)
+                continue;
+            found = true;
+            break;
+        }
+
+        if (!found) {
+            it++;
+            continue;
+        }
+            
+        it = new_children.erase(it);
+    }
+
+
+    if (new_children.size() == 0) {
+        obj = this->Objectman.replace_children(obj->ID, salient_children);
+    }
+    else {
+        for (auto & elem : salient_children) {
+            int ref_index = 0;
+            for (ref_index = 0; ref_index < (int)ref_children.size(); ref_index++) {
+                if (ref_children[ref_index] != elem)
+                    continue;
+                ref_index -= 1;
+                break;
+            }
+            if (ref_index < 0) {
+                new_children.insert(new_children.begin(), elem);
+                continue;
+            }
+
+            bool inserted = false;
+            while (true) {
+                auto & search = ref_children[ref_index];
+                for (size_t new_index = 0; new_index < new_children.size(); new_index++) {
+                    if (new_children[new_index] != search)
+                        continue;
+                        
+                    new_children.insert(new_children.begin() + new_index + 1, elem);
+                    inserted = true;
+                    break;
+                }
+
+                if (inserted)
+                    break;
+
+                if (ref_index == 0)
+                    break;
+
+                --ref_index;
+            }
+
+            if (!inserted) {
+                new_children.push_back(elem);
+            }
+        }
+
+        obj = this->Objectman.replace_children(obj->ID, new_children);
+    }
+
+    auto update_json = JSON{};
+    update_json["type"] = Objects::Protocol::Name_Action_Update_Children;
+    update_json["uuid"] = json["uuid"];
+
+    auto & update_children = update_json["children"];
+    for (auto elem : obj->Child_IDs) {
+        update_children.push_back(BlackRoot::Identify::UUID_To_String(elem));
+    }
+    update_json["salient"] = update_children;
+
+    std::string update_string = update_json.dump();
+
+        // Broadcast this event to all conduits
+    for (auto ref : this->Active_Conduits) {
+        std::unique_ptr<Conduits::DisposableMessage> reply(new Conduits::DisposableMessage());
+        reply->Message_String = "update_state_for_uuid";
+        reply->Segment_Map[""] = update_string;
         reply->sender_prepare_for_send();
         this->Message_Nexus->send_on_conduit(ref, reply.release());
     }
@@ -246,6 +395,20 @@ Layouts::Path Layouts::get_setup_dir()
     return this->Layout_Props.Setup_Dir;
 }
 
+const IrisBack::Objects::Object * Layouts::internal_get_from_JSON_string_or_throw(const JSON json)
+{
+    DbAssertMsgFatal(json.is_string(), "json was not a valid string");
+
+    const std::string & str = json.get<std::string>();
+    auto & uuid = UUID::from_string(str);
+    DbAssertMsgFatal(uuid, "json string was not a valid uuid");
+
+    auto * obj = this->Objectman.get(*uuid);
+    DbAssertMsgFatal(obj, "json uuid did not refer to a known object");
+
+    return obj;
+}
+
     //  Message
     // --------------------
 
@@ -279,10 +442,16 @@ void Layouts::_get_uuid_for_name(Conduits::Raw::IMessage *msg) noexcept
         std::string name = it->get<std::string>();
         auto obj = this->Objectman.find_by_name(name);
         
+        auto & add_it = request.find("add");
+        
         if (nullptr == obj) {
-            ret["uuid"] = "00000000-0000-0000-0000-000000000000";
+            if (add_it != request.end() && add_it->get<bool>()) {
+                obj = this->Objectman.create({}, Objects::Protocol::Type_Dummy, {});
+                this->Objectman.give_name(obj->ID, name);
+            }
         }
-        else {
+
+        if (nullptr != obj) {
             ret["uuid"] = BlackRoot::Identify::UUID_To_String(obj->ID);
         }
         
@@ -328,8 +497,14 @@ void Layouts::_update_state_for_uuid(Conduits::Raw::IMessage *msg) noexcept
         DbAssertMsgFatal(request.is_object(), "Request must update object");
             
         auto type = request["type"];
-        if (type == "change-children") {
+        if (type == Objects::Protocol::Name_Action_Update_Children) {
             this->internal_replace_children_from_command(request);
+        }
+        else if (type == Objects::Protocol::Name_Action_Create_Item) {
+            this->internal_create_object_from_command(request);
+        }
+        else if (type == Objects::Protocol::Name_Action_Update_Item) {
+            this->internal_update_object_from_command(request);
         }
 
         msg->set_OK();

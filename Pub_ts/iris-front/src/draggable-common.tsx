@@ -19,6 +19,10 @@ class DraggableObjectImplNone implements IDragObjectImpl {
                 return (<div className="panel small no-implement">...</div>);
             case "icon":
                 return (<div className="icon"><span className="icon-img no-implement">...</span></div>);
+            case "desk":
+                return (<div className="desk no-implement">...</div>);
+            case "widget":
+                return (<div className="widget no-implement">...</div>);
         }
 
         Data; return (<div>{Mode}</div>);
@@ -35,8 +39,10 @@ class DraggableObjectImplPanel extends DraggableObjectImplNone {
                             orientation="vertical"
                             onDragStart={e => DragWrangler.dnd_begin_drag(Data, e)}
                             onDragEnd={e => DragWrangler.dnd_end_drag(Data, e)}
-                            onDrop={e => DragWrangler.dnd_drop(Data, e)}
-                            getChildPayload={index => Data.Children_ID[index]}
+                            onDrop={e => DragWrangler.dnd_drop(Data, e, {})}
+                            removeOnDropOut={false}
+                            getChildPayload={index => ({ child: DragWrangler.find_by_uuid(Data.Children_ID[index]), mode: "copy" })}
+                            behaviour="copy"
                             dropPlaceholder={{
                                 animationDuration: 100,
                                 showOnTop: true,
@@ -53,7 +59,6 @@ class DraggableObjectImplPanel extends DraggableObjectImplNone {
                         </Container>
                     </div>
                 );
-                return (<div className="panel small">small panel</div>);
         }
 
         Data; return (<div>{Mode}</div>);
@@ -122,6 +127,111 @@ class DraggableObjectImplConnexion extends DraggableObjectImplNone {
     }
 }
 
+class DraggableObjectImplDesk extends DraggableObjectImplNone {
+    render(Mode: string, Data: DragObject): JSX.Element {
+        switch (Mode) {
+            case "desk":
+                return (
+                    <div className="dnd">
+                        <Container
+                            orientation="horizontal"
+                            onDragStart={e => DragWrangler.dnd_begin_drag(Data, e)}
+                            onDragEnd={e => DragWrangler.dnd_end_drag(Data, e)}
+                            onDrop={e => DragWrangler.dnd_drop(Data, e, {})}
+                            getChildPayload={index => ({ child: DragWrangler.find_by_uuid(Data.Children_ID[index]) }) }
+                            dropPlaceholder={{
+                                animationDuration: 100,
+                                showOnTop: true,
+                                className: 'icon-drop-preview'
+                            }}
+                        >
+                            {Data.Children_ID.map(item => {
+                                return (
+                                    <Draggable key={item} className={item}>
+                                        <DragObjectHolder object_uuid={item} parent_uuid={Data.ID} mode="stream" />
+                                    </Draggable>
+                                )}
+                            )}
+                        </Container>
+                    </div>
+                );
+        }
+        
+
+        Data; return (<div>{Mode}</div>);
+    }
+}
+
+class DraggableObjectImplStream extends DraggableObjectImplNone {
+    render(Mode: string, Data: DragObject): JSX.Element {
+        switch (Mode) {
+            case "stream":
+                return (
+                    <div className="stream">
+                        <div className="top">
+                        </div>
+                        <div className="stream-widget-dnd">
+                            <Container
+                                orientation="vertical"
+                                onDragStart={e => DragWrangler.dnd_begin_drag(Data, e)}
+                                onDragEnd={e => DragWrangler.dnd_end_drag(Data, e)}
+                                onDrop={e => DragWrangler.dnd_drop(Data, e, { transmute : "widget" } )}
+                                getChildPayload={index => ({ child : DragWrangler.find_by_uuid(Data.Children_ID[index]) }) }
+                                dropPlaceholder={{
+                                    animationDuration: 100,
+                                    showOnTop: true,
+                                    className: 'icon-drop-preview'
+                                }}
+                                shouldAcceptDrop={(options:any, payload:any) => {
+                                    console.log(options, payload);
+                                    return true;
+                                }}
+                            >
+                                {Data.Children_ID.map(item => {
+                                    return (
+                                        <Draggable key={item} className={item}>
+                                            <DragObjectHolder object_uuid={item} parent_uuid={Data.ID} mode="widget" />
+                                        </Draggable>
+                                    )}
+                                )}
+                            </Container>
+                        </div>
+                        <div className="stream-message-dnd">
+                            
+                        </div>
+                    </div>
+                );
+        }
+
+        Data; return (<div>{Mode}</div>);
+    }
+}
+
+class DraggableObjectImplWidget implements IDragObjectImpl {
+    onBegin(Data: DragObject): void {
+        Data;
+    }
+
+    onEnd(Data: DragObject): void {
+        Data;
+    }
+
+    render(Mode: string, Data: DragObject): JSX.Element {
+        switch (Mode) {
+            case "icon":
+                return (<div className="icon">widget :)</div>);
+            case "widget":
+                return (<div className="widget">widget :)</div>);
+        }
+
+        Data; return (<div>{Mode}</div>);
+    }
+}
+
 DragWrangler.register_implementation("none",      new DraggableObjectImplNone());
+DragWrangler.register_implementation("dummy",     new DraggableObjectImplNone());
 DragWrangler.register_implementation("panel",     new DraggableObjectImplPanel());
+DragWrangler.register_implementation("desk",      new DraggableObjectImplDesk());
+DragWrangler.register_implementation("stream",    new DraggableObjectImplStream());
 DragWrangler.register_implementation("connexion", new DraggableObjectImplConnexion());
+DragWrangler.register_implementation("widget",    new DraggableObjectImplWidget());

@@ -41,16 +41,19 @@ export class DragWrangler {
     static Socketman_Subscription_State: Fbemit.EventSubscription;
 
     static Events_Side_Panel: Fbemit.EventEmitter = new Fbemit.EventEmitter();
-    static Event_Name_Side_Panel_UUID = 'uuid-changed';
+    static Event_Name_Side_Panel_UUID = 'side-panel-uuid-changed';
+    static Event_Name_Loadout_UUID = 'loadout-uuid-changed';
 
     static Side_Panel_ID: string;
+    static Current_Loadout_ID: string;
     static Pending_Updates = Array<any>();
 
     static Object_Map = new Map<string, DragObject>();
     static Object_Implementations = new Map<string, IDragObjectImpl>();
 
     static Conduit_Iris: ISocketConduit;
-
+    
+    static Suspend_Because_Of_Updating = false;
     static Suspend_Because_Of_Dragging = false;
 
     static register_implementation(name: string, implementation: IDragObjectImpl) {
@@ -68,11 +71,11 @@ export class DragWrangler {
     static update_everything() {
         let self = this;
 
+            // Get uuid for the persistent panel
         let msg = new WsMsg.Message();
         msg.String = "get_uuid_for_name";
         msg.Segments.set("", (new TextEncoder()).encode(JSON.stringify({ "name" : LayProt.Protocol.Name_User_Persistent_Panel })));
         msg.set_accepts_response(true);
-        console.log(msg);
 
         let instr = new SocketSendInstr();
         instr.on_success = function (msg: WsMsg.Message) {
@@ -87,6 +90,33 @@ export class DragWrangler {
             self.Side_Panel_ID = uuid;
             self.Events_Side_Panel.emit(self.Event_Name_Side_Panel_UUID, { set_uuid: uuid } );
             self.req_iris_update_replace([ self.Side_Panel_ID ]);
+        }
+        instr.on_failure = function (msg: WsMsg.Message) {
+            console.log("DragWrangler: Could not get persistent panel id!", msg);
+        }
+
+        instr.message = msg;
+        this.Conduit_Iris.send_message(instr);
+
+            // Get uuid for the default loadout
+        msg = new WsMsg.Message();
+        msg.String = "get_uuid_for_name";
+        msg.Segments.set("", (new TextEncoder()).encode(JSON.stringify({ "name" : "lo-default-default", "add" : true })));
+        msg.set_accepts_response(true);
+
+        instr = new SocketSendInstr();
+        instr.on_success = function (msg: WsMsg.Message) {
+            let dec = JSON.parse((new TextDecoder('utf-8')).decode(msg.Segments.get("")));
+
+            let uuid = dec["uuid"];
+            if (typeof (uuid) != 'string') {
+                console.log("DragWrangler: Invalid return to 'get_uuid_for_name'", dec);
+                return;
+            }
+            
+            self.Current_Loadout_ID = uuid;
+            self.Events_Side_Panel.emit(self.Event_Name_Loadout_UUID, { set_uuid: uuid } );
+            self.req_iris_update_replace([ self.Current_Loadout_ID ]);
         }
         instr.on_failure = function (msg: WsMsg.Message) {
             console.log("DragWrangler: Could not get id!", msg);
@@ -110,7 +140,7 @@ export class DragWrangler {
             console.log(dec);
 
             for (let result in dec){
-               self.schedule_iris_update( { type: "update-item", uuid: result, value: dec[result] });
+               self.schedule_iris_update( { type: "update-item", uuid: result, ...dec[result] });
             }
 
             self.try_apply_iris_updates();
@@ -118,6 +148,8 @@ export class DragWrangler {
         instr.on_failure = function () {
             console.log("DragWrangler: Could not get state for " + ids);
         }
+        
+            console.log("HMMM", msg);
 
         instr.message = msg;
         this.Conduit_Iris.send_message(instr);
@@ -130,6 +162,8 @@ export class DragWrangler {
 
     static send_iris_update(update: any)
     {
+        console.log("send_iris_update", update);
+
             // Send a message which will perform
             // this update on the server side
         let msg = new WsMsg.Message();
@@ -150,14 +184,24 @@ export class DragWrangler {
 
     static try_apply_iris_updates()
     {
+        console.log("~~~");
+
+        if (0 == this.Pending_Updates.length)
+            return;
+
         if (this.Suspend_Because_Of_Dragging)
             return;
+        if (this.Suspend_Because_Of_Updating)
+            return;
+        
+        this.Suspend_Because_Of_Updating = true;
 
         console.log("DragWrangler: Applying iris updates", this.Pending_Updates);
 
         let new_ids = Array<string>();
 
-        for (let i = 0; i < this.Pending_Updates.length; i++) {
+        let update_length = this.Pending_Updates.length;
+        for (let i = 0; i < update_length; i++) {
             let item:any = this.Pending_Updates[i];
 
             console.log(item);
@@ -165,29 +209,30 @@ export class DragWrangler {
             let _obj = this.find_by_uuid(item.uuid);
             if (_obj === undefined) {
                 console.log("DragWrangler: Skip item", item);
-                continue;
+                continue;   
             }
             let obj = _obj as DragObject;
 
-            if (item.type == "update-item") {
-                console.log("DragWrangler: Update item", item);
+            if (item.type == LayProt.Protocol.Name_Action_Update_Item) {
+                console.log("DragWrangler: Update item", obj, item);
                 
-                if (obj.Type_Name != item.value.base_type_name) {
+                if (item.base_type_name !== undefined &&
+                    obj.Type_Name != item.base_type_name)
+                {
                     if (undefined !== obj.Implementation) {
                         obj.Implementation.onEnd(obj);
                     }
 
-                    obj.Type_Name      = item.value.base_type_name;
+                    obj.Type_Name      = item.base_type_name;
                     obj.Implementation = this.Object_Implementations.get(obj.Type_Name);
 
                     obj.Implement_Init = false;
                 }
                 
-                this.make_children_orphan(item);
-                obj.Children_ID    = item.value.children;
-                obj.Data.Desc      = item.value.description;
-                
-                if (obj.Children_ID !== undefined) {
+                if (item.children !== undefined) {
+                    this.make_children_orphan(item);
+                    obj.Children_ID    = item.children;
+                    
                     for (let c = 0; c < obj.Children_ID.length; c++) {
                         let child_obj = this.find_by_uuid(obj.Children_ID[c]);
                         if (undefined === child_obj) {
@@ -197,12 +242,26 @@ export class DragWrangler {
                         this.ensure_object_parent(child_obj as DragObject, obj);
                     }
                 }
+                
+                if (item.description !== undefined) {
+                    obj.Data.Desc      = item.description;
+                }
 
                 if (obj.Holder !== undefined) {
                     obj.Holder.forceUpdate();
                 }
+
+                if (item.uuid == this.Current_Loadout_ID) {
+                    console.log("DESK", item)
+                    if (obj.Type_Name == "dummy") {
+                        this.send_iris_update( {
+                            type: LayProt.Protocol.Name_Action_Update_Item, uuid: obj.ID,
+                            base_type_name : "desk"
+                        });
+                    }
+                }
             }
-            if (item.type == "change-children") {
+            if (item.type == LayProt.Protocol.Name_Action_Update_Children) {
                 console.log("DragWrangler: Change children", item);
                 
                     // Technically we should only care about the
@@ -235,7 +294,10 @@ export class DragWrangler {
             this.req_iris_update_replace(new_ids);
         }
 
-        this.Pending_Updates = [];
+        this.Pending_Updates.splice(0, update_length);
+        
+        this.Suspend_Because_Of_Updating = false;
+        this.try_apply_iris_updates();
     }
 
     static make_children_orphan(object: DragObject) {
@@ -282,18 +344,37 @@ export class DragWrangler {
         this.try_apply_iris_updates();
     }
 
-    static dnd_drop(parent: DragObject, e: DropResult) {
-        let obj = this.find_by_uuid(e.payload as string) as DragObject;
+    static dnd_drop(parent: DragObject, e: DropResult, extra: any) {
+        let obj = e.payload.child as DragObject;
         
+        if (e.addedIndex === null)
+            return;
+
+        console.log("dnd_drop", parent, obj, e);
+        
+        if (e.payload.mode !== undefined && e.payload.mode == "copy") {
+            obj = this.copy_object(obj);
+            console.log("dnd_drop copy", obj);
+        }
+        if (extra.transmute !== undefined) {
+            console.log("dnd_drop transmute", obj, extra.transmute);
+            this.send_iris_update( { type: LayProt.Protocol.Name_Action_Update_Item, uuid: obj.ID, base_type_name: extra.transmute });
+        }
+
         if (obj.Parent_ID == parent.ID) {
             parent.Children_ID.splice(e.removedIndex as number, 1);
         }
 
         let new_child_id = parent.Children_ID.slice();
 
-        new_child_id.splice(e.addedIndex as number, 0, e.payload as string);
+        new_child_id.splice(e.addedIndex as number, 0, obj.ID as string);
+
+        function onlyUnique(value:any, index:any, self:any) { 
+            return self.indexOf(value) === index;
+        }
+        new_child_id = new_child_id.filter(onlyUnique);
         
-        this.send_iris_update( { type: "change-children", uuid: parent.ID, children: new_child_id, salient: [  e.payload ] });
+        this.send_iris_update( { type: LayProt.Protocol.Name_Action_Update_Children, uuid: parent.ID, children: new_child_id, salient: [ obj.ID ] });
         this.try_apply_iris_updates();
     }
 
@@ -304,7 +385,20 @@ export class DragWrangler {
     static create_empty_object_with_uuid(uuid: string): DragObject {
         let obj = new DragObject();
         obj.ID = uuid;
+        obj.Type_Name = "dummy";
         obj.Implementation = this.Object_Implementations.get("none");
+        
+        this.Object_Map.set(uuid, obj);
+
+        return obj;
+    }
+    
+    static copy_object(template: DragObject): DragObject {
+        let obj = this.create_empty_object_with_uuid(uuidv1());
+        
+        this.send_iris_update( { type: LayProt.Protocol.Name_Action_Create_Item, uuid: obj.ID });
+        this.send_iris_update( { type: LayProt.Protocol.Name_Action_Update_Item, uuid: obj.ID, Type_Name: template.Type_Name, description: template.Data.Desc });
+
         return obj;
     }
 
