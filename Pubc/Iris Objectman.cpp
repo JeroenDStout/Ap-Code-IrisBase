@@ -143,7 +143,7 @@ Objectman::JSON Objectman::get_json(UUID id)
 
     JSON ret;
     ret["base_type_name"] = obj->Base_Type_Name;
-    ret["description"]    = obj->Object_Description;
+    ret["desc"]           = obj->Object_Description;
     ret["parent"]         = BlackRoot::Identify::UUID_To_String(obj->Parent_ID);
 
     if (obj->Child_IDs.size() > 0) {
