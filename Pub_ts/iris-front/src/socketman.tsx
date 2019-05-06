@@ -136,12 +136,16 @@ export class Socketman {
 
     static send_message_on_socket(instr:SocketSendInstr): ISocketResponseHandler|undefined
     {
-        console.log("##################", instr);
+        if (instr.message === undefined) {
+            console.log("Socketman: No message supplied with instructions", instr);
+            return undefined;
+        }
 
             // Find open socket
         let socket = this.Open_Sockets.get(instr.host_name);
-        if (socket == undefined) {
+        if (socket === undefined) {
             console.log("Socketman: Message on non-open socket: '" + instr.host_name + "'", instr.message);
+            instr.on_failure(instr.message);
             return undefined;
         }
 
@@ -234,6 +238,8 @@ export class Socketman {
         }
 
         let handler = _handler as SocketResponseHandler;
+
+        console.log(msg);
 
         if (msg.get_is_OK()) {
             handler.on_success(msg);

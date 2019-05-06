@@ -36,33 +36,40 @@
 
             .stream {
                 border-radius: 4px;
-                -webkit-box-shadow: inset 0px 7px 21px 4px rgba(0,23,71,0.23);
-                box-shadow: inset 0px 7px 21px 4px rgba(0,23,71,0.23);
                 min-width: 300px;
                 height: 100%;
-                background: #3d2d16; /* Old browsers */
-                background: -moz-linear-gradient(-45deg, #3d2d16 0%, #140f05 100%); /* FF3.6-15 */
-                background: -webkit-linear-gradient(-45deg, #3d2d16 0%,#140f05 100%); /* Chrome10-25,Safari5.1-6 */
-                background: linear-gradient(135deg, #3d2d16 0%,#140f05 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3d2d16', endColorstr='#140f05',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+                /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3a3123+0,110e08+100 */
+                background: #3a3123; /* Old browsers */
+                background: -moz-linear-gradient(-45deg, #3a3123 0%, #110e08 100%); /* FF3.6-15 */
+                background: -webkit-linear-gradient(-45deg, #3a3123 0%,#110e08 100%); /* Chrome10-25,Safari5.1-6 */
+                background: linear-gradient(135deg, #3a3123 0%,#110e08 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3123', endColorstr='#110e08',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
                 display: flex;
                 flex-direction: column;
+                margin: 0px 0px 0px 2px;
 
                 > .top {
-                    height: 30px;
-                }
+                    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ad885f+0,634f32+100 */
+                    background: #ad885f; /* Old browsers */
+                    background: -moz-linear-gradient(-45deg, #ad885f 0%, #634f32 100%); /* FF3.6-15 */
+                    background: -webkit-linear-gradient(-45deg, #ad885f 0%,#634f32 100%); /* Chrome10-25,Safari5.1-6 */
+                    background: linear-gradient(135deg, #ad885f 0%,#634f32 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ad885f', endColorstr='#634f32',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 
-                > .stream-widget-dnd {
-                    margin: 2px;
-                    background: #825b2e; /* Old browsers */
-                    background: -moz-linear-gradient(-45deg, #825b2e 0%, #3f3521 100%); /* FF3.6-15 */
-                    background: -webkit-linear-gradient(-45deg, #825b2e 0%,#3f3521 100%); /* Chrome10-25,Safari5.1-6 */
-                    background: linear-gradient(135deg, #825b2e 0%,#3f3521 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#825b2e', endColorstr='#3f3521',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-                    min-height: 10px;
+                    min-height: 30px;
+
+                    > .title {
+                        min-height: 30px;
+                    }
+
+                    > .stream-widget-dnd {
+                        min-height: 30px;
+                    }
                 }
 
                 > .stream-message-dnd {
+                    -webkit-box-shadow: inset 0px 7px 21px 4px rgba(0,23,71,0.23);
+                    box-shadow: inset 0px 7px 21px 4px rgba(0,23,71,0.23);
                     flex: 1;
                 }
             }
@@ -82,11 +89,68 @@
     }
 }
 
-.stream-widget-dnd .widget {
-    -moz-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
-    -webkit-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
-    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
-    min-height: 30px;
+.stream-widget-dnd {
+    .widget-frame {
+        -moz-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
+        -webkit-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
+        box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
+        min-height: 30px;
+        position: relative;
+
+        .socket-icon {
+            border-radius: 4px;
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            width: 15px;
+            height: 15px;
+            opacity: .25;
+            border: 1px solid rgba(0, 0, 0, .5);
+        }
+
+        input[type="text"] {
+            -webkit-appearance: none;
+            border: 1px solid rgba(0, 0, 0, .25);
+            -webkit-box-shadow: inset 1px 1px 5px 0px rgba(0,22,54,0.25);
+            -moz-box-shadow: inset 1px 1px 5px 0px rgba(0,22,54,0.25);
+            box-shadow: inset 1px 1px 5px 0px rgba(0,22,54,0.25);
+            background: rgba(255, 255, 255, .02);
+            padding: 4px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .header-element {
+            position: relative;
+            margin-left: 21px;
+            margin-right: 30px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            min-height: 27px;
+            font-weight: bold;
+            box-sizing: border-box;
+
+            input[type="text"] {
+                margin-right: 30px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+
+        .hatch {
+            background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(0, 0, 0, .1) 4px, rgba(0, 0, 0, .1) 8px);
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+        }
+    }
+
+    .widget-frame.broken {
+        filter: blur(1px)
+    }
 }
 
 .smooth-dnd-ghost {

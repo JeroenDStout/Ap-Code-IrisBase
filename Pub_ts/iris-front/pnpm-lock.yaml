@@ -8335,7 +8335,6 @@ packages:
       tapable: 0.2.9
       uglifyjs-webpack-plugin: 0.4.6_webpack@3.8.1
       watchpack: 1.6.0
-      webpack: 3.8.1_webpack@3.8.1
       webpack-sources: 1.3.0
       yargs: 8.0.2
     dev: false

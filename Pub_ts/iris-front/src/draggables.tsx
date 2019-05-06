@@ -184,8 +184,6 @@ export class DragWrangler {
 
     static try_apply_iris_updates()
     {
-        console.log("~~~");
-
         if (0 == this.Pending_Updates.length)
             return;
 
@@ -243,8 +241,10 @@ export class DragWrangler {
                     }
                 }
                 
-                if (item.description !== undefined) {
-                    obj.Data.Desc      = item.description;
+                console.log("HMM ------------------------- desc", item.desc);
+
+                if (item.desc !== undefined) {
+                    obj.Data.Desc      = item.desc;
                 }
 
                 if (obj.Holder !== undefined) {
@@ -397,9 +397,14 @@ export class DragWrangler {
         let obj = this.create_empty_object_with_uuid(uuidv1());
         
         this.send_iris_update( { type: LayProt.Protocol.Name_Action_Create_Item, uuid: obj.ID });
-        this.send_iris_update( { type: LayProt.Protocol.Name_Action_Update_Item, uuid: obj.ID, Type_Name: template.Type_Name, description: template.Data.Desc });
+        this.send_iris_update( { type: LayProt.Protocol.Name_Action_Update_Item, uuid: obj.ID, Type_Name: template.Type_Name, desc: template.Data.Desc });
 
         return obj;
+    }
+
+    static handle_object_updated(obj: DragObject)
+    {
+        this.send_iris_update( { type: LayProt.Protocol.Name_Action_Update_Item, uuid: obj.ID, Type_Name: obj.Type_Name, desc: obj.Data.Desc });
     }
 
     static obtain_object_for_holder(uuid: string, parent: string, holder: DragObjectHolder): DragObject {
@@ -481,8 +486,8 @@ export class DragObjectHolder extends React.PureComponent<IDragObjectHolder, obj
     }
 
     render() {
-        console.log("Rendering holder (" + this.state.object_uuid + ")", this.state.drag_object)
-        
+        console.log("AAAAAAAAAA ~~~~~~~~~~");
+
         if (!this.state.drag_object.Implement_Init) {
             if (this.state.drag_object.Implementation !== undefined) {
                 (this.state.drag_object.Implementation as IDragObjectImpl).onBegin(this.state.drag_object);
