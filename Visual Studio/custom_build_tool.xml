@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomBuildTool>
+    <ForPrefix path="..\Pub_ts\iris-front\src\*.scss">
+      <FileType>Document</FileType>
+      <Command>sass "%(Identity)" "%(RelativeDir)\-gen\%(Filename).css"</Command>
+      <Outputs>%(RelativeDir)\-gen\%(Filename).css</Outputs>
+      <BuildInParallel>true</BuildInParallel>
+      <MaxProcesses>4</MaxProcesses>
+      <Message>sass %(Identity)</Message>
+    </ForPrefix>
+    <ForPrefix path="..\Pub_ts\iris-front\src\*.ts">
+      <FileType>Document</FileType>
+      <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <BuildInParallel>true</BuildInParallel>
+      <MaxProcesses>999</MaxProcesses>
+      <Message>Booping %(Identity)</Message>
+    </ForPrefix>
+    <ForPrefix path="..\Pub_ts\iris-front\src\*.tsx">
+      <FileType>Document</FileType>
+      <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <BuildInParallel>true</BuildInParallel>
+      <MaxProcesses>999</MaxProcesses>
+      <Message>Booping %(Identity)</Message>
+    </ForPrefix>
+    <ForPrefix path="..\Pub_ts\iris-front\src\-ex-ts\*.ts">
+      <FileType>Document</FileType>
+      <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <BuildInParallel>true</BuildInParallel>
+      <MaxProcesses>999</MaxProcesses>
+      <Message>Booping %(Identity)</Message>
+    </ForPrefix>
+    <ForPrefix path="..\Pub_ts\iris-front\src\-ex-ts\*.tsx" >
+      <FileType>Document</FileType>
+      <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <BuildInParallel>true</BuildInParallel>
+      <MaxProcesses>999</MaxProcesses>
+      <Message>Booping %(Identity)</Message>
+    </ForPrefix>
+    <ForPrefix path="..\Pub_ts\iris-front\src\-gen\*.css">
+      <FileType>Document</FileType>
+      <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <BuildInParallel>true</BuildInParallel>
+      <MaxProcesses>4</MaxProcesses>
+      <Message>Booping %(Identity)</Message>
+    </ForPrefix>
+    <ForPrefix path=".\Pub_ts\iris-front\src\-ex-res\*">
+      <FileType>Document</FileType>
+      <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <BuildInParallel>true</BuildInParallel>
+      <MaxProcesses>4</MaxProcesses>
+      <Message>Booping %(Identity)</Message>
+    </ForPrefix>
+</CustomBuildTool>

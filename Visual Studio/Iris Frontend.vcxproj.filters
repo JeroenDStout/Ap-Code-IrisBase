@@ -3,17 +3,11 @@
   <ItemGroup>
     <CustomBuild Include="..\Pub_ts\iris-front\build_using_tool.txt" />
     <CustomBuild Include="..\Pub_ts\iris-front\public\manifest.json" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*.scss">
+    <CustomBuild Include="..\Pub_ts\iris-front\src\setup.scss">
       <Filter>scss</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*.ts">
-      <Filter>typescript</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx">
-      <Filter>typescript</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\*.css">
-      <Filter>css</Filter>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.scss">
+      <Filter>scss</Filter>
     </CustomBuild>
     <CustomBuild Include="..\Pub_ts\iris-front\src\ex-ts\*">
       <Filter>typescript\ex</Filter>
@@ -21,11 +15,132 @@
     <CustomBuild Include="..\Pub_ts\iris-front\src\ex-res\*">
       <Filter>res</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-res\raw_logo.png" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\setup.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\setup.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\stream-area.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\App.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggable-common.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggables.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\index.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\App.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggable-common.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggables.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\index.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\App.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggable-common.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggables.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\index.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\App.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggable-common.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggables.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\index.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\App.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggable-common.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggables.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\index.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Messages.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Shared.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol What-ho.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Messages.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Shared.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol What-ho.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Messages.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Shared.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol What-ho.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Widget.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\setup.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\stream-area.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\setup.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\stream-area.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\widget-depo.ts" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\app.scss">
+      <Filter>scss</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\app.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\setup.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\stream-area.css" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\App.test.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\App.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggable-common.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggables.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\index.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Layouts Protocol.ts">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Widget.ts">
+      <Filter>typescript\ex</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Messages.ts">
+      <Filter>typescript\ex</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Shared.ts">
+      <Filter>typescript\ex</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol What-ho.ts">
+      <Filter>typescript\ex</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\stream-area.css">
+      <Filter>gen-css</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx">
+      <Filter>typescript</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\widget-depo.ts">
+      <Filter>typescript</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="css">
-      <UniqueIdentifier>{9092a891-ea61-4578-89a2-986f5e29dc25}</UniqueIdentifier>
-    </Filter>
     <Filter Include="typescript">
       <UniqueIdentifier>{9092a891-ea61-4578-89a2-986f5e29dc26}</UniqueIdentifier>
     </Filter>
@@ -37,6 +152,9 @@
     </Filter>
     <Filter Include="res">
       <UniqueIdentifier>{32e88d61-f2f9-47ac-af22-11dde4f5d92e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen-css">
+      <UniqueIdentifier>{9092a891-ea61-4578-89a2-986f5e29dc25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
