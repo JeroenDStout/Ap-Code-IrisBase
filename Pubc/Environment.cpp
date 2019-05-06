@@ -3,6 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "BlackRoot/Pubc/Assert.h"
+#include "BlackRoot/Pubc/FileSource Prefix.h"
 
 #include "IrisBase/Pubc/Environment.h"
 #include "IrisBase/Pubc/Base Layouts.h"
@@ -20,10 +21,13 @@ CON_RMR_REGISTER_FUNC(Environment, create_layouts);
 
 Environment::Environment()
 {
+    this->WidgetSupplier.Nexus = this->Message_Nexus;
+    this->WidgetSupplier.FileSource.reset(new BlackRoot::Util::FileSourcePrefix<BlackRoot::IO::BaseFileSource>());
 }
 
 Environment::~Environment()
 {
+    this->WidgetSupplier.FileSource.reset();
 }
 
     //  Control
@@ -36,7 +40,8 @@ void Environment::create_layouts()
     this->Layouts = this->internal_allocate_layouts();
     this->Layouts->initialise({});
     
-    this->Simple_Relay.Call_Map["lay"] = std::bind(&Core::ILayouts::async_relay_message, this->Layouts, _1);
+    this->Simple_Relay.Call_Map["irws"] = std::bind(&IrisWidget::Backend::WidgetSupplier::rmr_handle_message_immediate_and_release, &this->WidgetSupplier, _1);
+    this->Simple_Relay.Call_Map["lay"]  = std::bind(&Core::ILayouts::async_relay_message, this->Layouts, _1);
     
     this->Layouts->commence();
 }
@@ -51,7 +56,15 @@ void Environment::internal_unload_all()
     }
 
     this->Simple_Relay.Call_Map.erase("lay");
+}
 
+void Environment::set_ref_dir(FilePath path)
+{
+    this->BaseEnvironment::set_ref_dir(path);
+    
+    auto * prefix = new BlackRoot::Util::FileSourcePrefix<BlackRoot::IO::BaseFileSource>();
+    prefix->Prefix = this->get_ref_dir() / "Web/widgets";
+    this->WidgetSupplier.FileSource.reset(prefix);
 }
 
     //  Util

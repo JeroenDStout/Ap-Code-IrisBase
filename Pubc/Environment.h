@@ -8,6 +8,8 @@
 
 #include "IrisBase/Pubc/Interface Layouts.h"
 
+#include "IrisWidget/Pubc/Widget Supplier.h"
+
 namespace IrisBack {
 namespace Core {
     
@@ -16,6 +18,7 @@ namespace Core {
 
     protected:
         Core::ILayouts * Layouts;
+        IrisWidget::Backend::WidgetSupplier WidgetSupplier;
         
             // Web
 		
@@ -33,6 +36,8 @@ namespace Core {
         
         void create_layouts();
         void internal_unload_all() override;
+        
+        void set_ref_dir(FilePath) override;
 
             // Util
 
