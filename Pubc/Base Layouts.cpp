@@ -235,6 +235,7 @@ void Layouts::internal_update_object_from_command(const JSON json)
     
     auto update_json = this->Objectman.get_json(obj->ID);
     update_json["uuid"] = json["uuid"];
+    update_json["type"] = Objects::Protocol::Name_Action_Update_Item;
 
     std::string update_string = update_json.dump();
 
