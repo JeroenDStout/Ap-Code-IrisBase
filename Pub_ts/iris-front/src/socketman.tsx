@@ -146,7 +146,7 @@ export class Socketman {
         let socket = this.Open_Sockets.get(instr.host_name);
         if (socket === undefined) {
             console.log("Socketman: Message on non-open socket: '" + instr.host_name + "'", instr.message);
-            instr.on_failure(instr.message);
+            instr.on_failure(undefined);
             return undefined;
         }
 
