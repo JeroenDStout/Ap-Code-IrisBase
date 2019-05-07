@@ -114,7 +114,7 @@ export class WidgetDepo {
 
             // Load our implementaiton and eval it
         let create_implementation:any = (<any>Window)["f"];
-        let out:any = create_implementation(console);
+        let out:any = create_implementation();
 
         this.Widget_Implementations.set(full_name, out as IWidgetCreator);
         
