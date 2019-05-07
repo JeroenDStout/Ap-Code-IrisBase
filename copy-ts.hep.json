@@ -31,7 +31,9 @@
         { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol What-ho.ts",
           "out" : "{ex-dir}/Websocket Protocol What-ho.ts" },
         { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol Messages.ts",
-          "out" : "{ex-dir}/Websocket Protocol Messages.ts" }
+          "out" : "{ex-dir}/Websocket Protocol Messages.ts" },
+        { "in"  : "{conduits-dir}/Pub_ts/Websocket Protocol Interface.ts",
+          "out" : "{ex-dir}/Websocket Protocol Interface.ts" }
       ]
     }
   ]

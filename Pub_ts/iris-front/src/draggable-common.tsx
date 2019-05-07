@@ -3,7 +3,9 @@ import { Socketman, SocketStateInfo } from "./socketman";
 import * as Fbemit from 'fbemitter';
 import { DragWrangler, DragObject, DragObjectHolder, IDragObjectImpl  } from "./draggables";
 import { WidgetDepo } from "./widget-depo";
-import { IWidgetCollection, IWidgetFrameData }  from './-ex-ts/Widget Interfaces'
+import * as SockMan from "./socketman";
+import { IWidgetCollection, IWidgetFrameData, ISocketSendInstr, ISocketResponseHandler }  from './-ex-ts/Widget Interfaces'
+import * as WbSckMsg from './-ex-ts/Websocket Protocol Messages'
 import * as React from 'react';
 
 class DraggableObjectImplNone implements IDragObjectImpl {
@@ -249,6 +251,16 @@ class WidgetFrameData implements IWidgetFrameData {
         for (let i = 0; i < this.Update_Items.length; i++) {
             this.Update_Items[i].rerender_update();
         }
+    }
+    
+    create_socket_send_with_msg(): ISocketSendInstr {
+        let instr = new SockMan.SocketSendInstr();
+        instr.message = new WbSckMsg.Message();
+        return instr;
+    }
+
+    send_socket(instr: ISocketSendInstr): ISocketResponseHandler|undefined {
+        return Socketman.send_message_on_socket(instr);
     }
 }
 
