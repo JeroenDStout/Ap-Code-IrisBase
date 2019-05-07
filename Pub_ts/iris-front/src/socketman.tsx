@@ -2,6 +2,7 @@ import * as Fbemit from 'fbemitter';
 import * as WsWH   from './-ex-ts/Websocket Protocol What-ho'
 import * as WsMsg  from './-ex-ts/Websocket Protocol Messages'
 import * as WsSh   from './-ex-ts/Websocket Protocol Shared'
+import * as WidInf from './-ex-ts/Widget Interfaces'
 const { detect } = require('detect-browser');
 const browser = detect();
 
@@ -29,16 +30,16 @@ export class SocketStateInfo {
 export class ConduitInfo {
 }
 
-export interface ISocketResponseHandler {
+export interface ISocketResponseHandler extends WidInf.ISocketResponseHandler {
     on_success(msg: WsMsg.Message): void;
     on_failure(msg: WsMsg.Message): void;
 }
 
-export class SocketSendInstr {
+export class SocketSendInstr implements WidInf.ISocketSendInstr {
     host_name: string;
     message: WsMsg.Message;
     on_success(msg: WsMsg.Message): void { msg; };
-    on_failure(msg: WsMsg.Message): void { msg; };
+    on_failure(msg: WsMsg.Message|undefined): void { msg; };
 }
 
 export interface ISocketConduit {
