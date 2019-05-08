@@ -1,12 +1,15 @@
 import { Container, Draggable } from "react-smooth-dnd";
 import { Socketman, SocketStateInfo } from "./socketman";
 import * as Fbemit from 'fbemitter';
-import { DragWrangler, DragObject, DragObjectHolder, IDragObjectImpl  } from "./draggables";
+import { DragWrangler, DragObject, DragObjectHolder, EmitPost, EmitPostHolder, IDragObjectImpl } from "./draggables";
 import { WidgetDepo } from "./widget-depo";
 import * as SockMan from "./socketman";
-import { IWidgetCollection, IWidgetFrameData, ISocketSendInstr, ISocketResponseHandler }  from './-ex-ts/Widget Interfaces'
+import { IWidgetCollection, IWidgetFrameData, ISocketSendInstr, ISocketResponseHandler, IPostProps }  from './-ex-ts/Widget Interfaces'
 import * as WbSckMsg from './-ex-ts/Websocket Protocol Messages'
 import * as React from 'react';
+import { SizeMe } from "react-sizeme";
+
+const uuidv1 = require('uuid/v1');
 
 class DraggableObjectImplNone implements IDragObjectImpl {
     onBegin(Data: DragObject): void {
@@ -30,6 +33,10 @@ class DraggableObjectImplNone implements IDragObjectImpl {
         }
 
         Data; return (<div>{Mode}</div>);
+    }
+
+    emit_post_on(obj: DragObject, post: EmitPost): boolean {
+        return false;
     }
 }
 
@@ -168,49 +175,87 @@ class DraggableObjectImplDesk extends DraggableObjectImplNone {
 }
 
 class DraggableObjectImplStream extends DraggableObjectImplNone {
-    render(Mode: string, Data: DragObject): JSX.Element {
+    emit_post_on(Obj: DragObject, post: EmitPost): boolean {
+        post.ID = uuidv1();
+        Obj.Posts.splice(0, 0, post);
+        if (Obj.Holder !== undefined)
+            Obj.Holder.forceUpdate();
+        return true;
+    }
+
+    render(Mode: string, obj: DragObject): JSX.Element {
+    //    let holder = (obj.Holder as DragObjectHolder);
+        
         switch (Mode) {
             case "stream":
                 return (
+                    <SizeMe monitorHeight>{({ size }) => <div style={{ height: "100%" }}>
                     <div className="stream">
                         <div className="top">
                             <div className="title">
                             </div>
-                            <div className="stream-widget-dnd">
+                            <div className="stream-widget-dnd" style={{ maxHeight: ((size.height as number)*.55) + "px" }}>
+                                <div className="scroll-area">
+                                    <Container
+                                        orientation="vertical"
+                                        nonDragAreaSelector="*.no-drag"
+                                        onDragStart={e => DragWrangler.dnd_begin_drag(obj, e)}
+                                        onDragEnd={e => DragWrangler.dnd_end_drag(obj, e)}
+                                        onDrop={e => DragWrangler.dnd_drop(obj, e, { transmute : "widget-frame" } )}
+                                        getChildPayload={index => ({ child : DragWrangler.find_by_uuid(obj.Children_ID[index]) }) }
+                                        dragBeginDelay={250}
+                                        dropPlaceholder={{
+                                            animationDuration: 100,
+                                            showOnTop: true,
+                                            className: 'icon-drop-preview'
+                                        }}
+                                        shouldAcceptDrop={(options:any, payload:any) => {
+                                            console.log(options, payload);
+                                            return true;
+                                        }}
+                                    >
+                                        {obj.Children_ID.map(item => {
+                                            return (
+                                                <Draggable key={item} className={item}
+                                                >
+                                                    <DragObjectHolder object_uuid={item} parent_uuid={obj.ID} mode="widget-frame" />
+                                                </Draggable>
+                                            )}
+                                        )}
+                                    </Container>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="stream-post-dnd">
+                            <div className="scroll-area">
                                 <Container
                                     orientation="vertical"
-                                    onDragStart={e => DragWrangler.dnd_begin_drag(Data, e)}
-                                    onDragEnd={e => DragWrangler.dnd_end_drag(Data, e)}
-                                    onDrop={e => DragWrangler.dnd_drop(Data, e, { transmute : "widget-frame" } )}
-                                    getChildPayload={index => ({ child : DragWrangler.find_by_uuid(Data.Children_ID[index]) }) }
-                                    dropPlaceholder={{
-                                        animationDuration: 100,
-                                        showOnTop: true,
-                                        className: 'icon-drop-preview'
-                                    }}
+                                    nonDragAreaSelector="*.no-drag"
+                                    onDragStart={e => DragWrangler.dnd_begin_drag(obj, e)}
+                                    onDragEnd={e => DragWrangler.dnd_end_drag(obj, e)}
+                                    onDrop={e => DragWrangler.dnd_drop(obj, e, { transmute : "widget-frame" } )}
+                                    getChildPayload={index => ({ child : DragWrangler.find_by_uuid(obj.Children_ID[index]) }) }
+                                    dragBeginDelay={250}
                                     shouldAcceptDrop={(options:any, payload:any) => {
-                                        console.log(options, payload);
-                                        return true;
+                                        return false;
                                     }}
                                 >
-                                    {Data.Children_ID.map(item => {
+                                    {obj.Posts.map(item => {
                                         return (
-                                            <Draggable key={item} className={item}>
-                                                <DragObjectHolder object_uuid={item} parent_uuid={Data.ID} mode="widget-frame" />
+                                            <Draggable key={item.ID}>
+                                                <EmitPostHolder post={item} />
                                             </Draggable>
                                         )}
                                     )}
                                 </Container>
                             </div>
                         </div>
-                        <div className="stream-message-dnd">
-                            
-                        </div>
                     </div>
+                    </div>}</SizeMe>
                 );
         }
 
-        Data; return (<div>{Mode}</div>);
+        return (<div>{Mode}</div>);
     }
 }
 
@@ -262,9 +307,19 @@ class WidgetFrameData implements IWidgetFrameData {
     send_socket(instr: ISocketSendInstr): ISocketResponseHandler|undefined {
         return Socketman.send_message_on_socket(instr);
     }
+
+    create_post_props(): IPostProps {
+        let post = new EmitPost();
+        post.obj = this.Obj;
+        post.receive_time = new Date(Date.now());
+        return post;
+    }
+    emit_post(post: IPostProps): void {
+        DragWrangler.emit_post_on_object(post as EmitPost);
+    }
 }
 
-class DraggableObjectImplWidgetFrame implements IDragObjectImpl {
+class DraggableObjectImplWidgetFrame extends DraggableObjectImplNone {
     onBegin(Obj: DragObject): void {
         Obj.Data.WidgetFrameData = new WidgetFrameData();
         let w_data = Obj.Data.WidgetFrameData as WidgetFrameData;

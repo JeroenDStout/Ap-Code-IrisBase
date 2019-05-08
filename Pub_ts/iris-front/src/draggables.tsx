@@ -6,8 +6,10 @@
 import { Socketman, ISocketConduit, SocketSendInstr, ConduitOpenInstr, ConduitInfo, SocketStateInfo } from './socketman';
 import * as WsMsg  from './-ex-ts/Websocket Protocol Messages'
 import * as LayProt from './-ex-ts/Layouts Protocol'
+import * as WidgetIntf from './-ex-ts/Widget Interfaces'
 import * as React from 'react';
 import * as Fbemit from 'fbemitter';
+import * as ReactJson from 'react-json-view';
 import { DragStartParams, DragEndParams, DropResult } from "react-smooth-dnd";
 import './-gen/app.css';
 
@@ -28,12 +30,26 @@ export class DragObject {
     Data: any = {};
     Implementation: IDragObjectImpl|undefined = undefined;
     Implement_Init = false;
+    Posts = new Array<EmitPost>();
+}
+
+export class EmitPost implements WidgetIntf.IPostProps {
+    obj: any;
+    ID: string = "n/a";
+    receive_time: Date = new Date(0);
+    latency: number = -1;
+    emitter_title: string = "";
+    re_user_action: string = "";
+    generic_body: any = undefined;
+    generic_is_ok: any = undefined;
+    data_list = new Array<any>();
 }
 
 export interface IDragObjectImpl {
     onBegin(Data: DragObject): void;
     onEnd(Data: DragObject): void;
     render(Mode: string, Data: DragObject): JSX.Element;
+    emit_post_on(obj: DragObject, post: EmitPost): void;
 }
 
 export class DragWrangler {
@@ -466,6 +482,21 @@ export class DragWrangler {
         }
     }
 
+    static emit_post_on_object(post: EmitPost) {
+        let parent = this.find_by_uuid(post.obj.Parent_ID);
+
+        if (parent !== undefined) {
+            let ac_parent = parent as DragObject;
+            if (ac_parent.Implementation && ac_parent.Implementation.emit_post_on(ac_parent, post)) {
+                return;
+            }
+
+            console.log("%c Could not emit post on object", "font-weight: bold; background: #FDD", parent, post);
+        }
+        
+        console.log("%c Could not emit post for object: no parent", "font-weight: bold; background: #FDD", post);
+    }
+
     static get_unique_uuid(): string {
         return uuidv1();
     }
@@ -486,8 +517,6 @@ export class DragObjectHolder extends React.PureComponent<IDragObjectHolder, obj
     }
 
     render() {
-        console.log("AAAAAAAAAA ~~~~~~~~~~");
-
         if (!this.state.drag_object.Implement_Init) {
             if (this.state.drag_object.Implementation !== undefined) {
                 (this.state.drag_object.Implementation as IDragObjectImpl).onBegin(this.state.drag_object);
@@ -504,5 +533,96 @@ export class DragObjectHolder extends React.PureComponent<IDragObjectHolder, obj
         }
         
         return (this.state.drag_object.Implementation as IDragObjectImpl).render(this.state.mode, this.state.drag_object);
+    }
+}
+
+interface IPostHolder {
+    post: EmitPost;
+}
+
+export class EmitPostHolder extends React.PureComponent<IPostHolder, object> {
+    state = { post: new EmitPost() };
+
+    constructor(prop: any) {
+        super(prop);
+        this.state.post = prop.post;
+    }
+
+    render() {
+        let post = this.props.post;
+        let elem = new Array<any>();
+
+        if (post === undefined)
+            return (<div>uh oh</div>);
+
+        if (post.receive_time.getTime() != 0) {
+            var h = post.receive_time.getHours();
+            var m = post.receive_time.getMinutes();
+            var s = post.receive_time.getSeconds();
+
+            var time_string =   ((h < 10) ? "0" + h : h) + ":"
+                              + ((m < 10) ? "0" + m : m) + ":"
+                              + ((s < 10) ? "0" + s : s);
+
+            if (post.latency != -1) {
+                time_string += " (" + post.latency + "ms)";
+            }
+
+            elem.push(<div className="time">{time_string}</div>);
+        }
+
+        if (post.generic_is_ok !== undefined) {
+            if (post.generic_is_ok === "OK") {
+                elem.push(<div className="generic-is-ok ok">{'\u2713'}</div>);
+            }
+            else if (post.generic_is_ok === "FAILED") {
+                elem.push(<div className="generic-is-ok failed">{'\u2718'}</div>);
+            }
+        }
+
+        if (post.emitter_title.length > 0) {
+            elem.push(<div className="title">{post.emitter_title}</div>);
+        }
+
+        if (post.re_user_action.length > 0) {
+            elem.push(<div className="re-user-action">{post.re_user_action}</div>);
+        }
+
+        if (post.generic_body !== undefined) {
+            elem.push(<div className="body">{post.generic_body}</div>);
+        }
+
+        for (let i = 0; i < post.data_list.length; i++) {
+            let con = post.data_list[i];
+            if (typeof (con) === 'string') {
+                elem.push(<div>{con}</div>);
+                continue;
+            }
+            if (typeof (con) === 'object') {
+                elem.push(<ReactJson.default collapsed={2} sortKeys={true} indentWidth={2} enableClipboard={false}
+                                 displayObjectSize={false} displayDataTypes={false} theme={{
+                                    base00: 'rgba(0, 0, 0, 0)',
+                                    base01: '#073642',
+                                    base02: '#586e75',
+                                    base03: '#657b83',
+                                    base04: '#839496',
+                                    base05: '#93a1a1',
+                                    base06: '#eee8d5',
+                                    base07: '#fdf6e3',
+                                    base08: '#dc322f',
+                                    base09: '#cb4b16',
+                                    base0A: '#b58900',
+                                    base0B: '#859900',
+                                    base0C: '#2aa198',
+                                    base0D: '#268bd2',
+                                    base0E: '#6c71c4',
+                                    base0F: '#d33682'
+                        }} src={con} />);
+                continue;
+            }
+            elem.push(<div className="line">Unknown element</div>);
+        }
+        
+        return (<div className="post">{...elem}</div>);
     }
 }
