@@ -16,7 +16,9 @@
     "uuid": "*",
     "fbemitter": "2.1.1",
     "prop-types": "^15.5.7",
-    "detect-browser": "^4.5.0"
+    "detect-browser": "^4.5.0",
+    "react-sizeme": "2.6.7",
+    "react-json-view": "1.19.1"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -27,11 +29,14 @@
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "@types/node": "^11.13.5",
-    "@types/react": "^16.8.13",
+    "@types/react": "^16.8.16",
     "@types/react-dom": "^16.8.4",
     "@types/fbemitter": "2.0.32",
     "@types/prop-types": "*",
     "@types/node": "*",
     "typescript": "^3.4.4"
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
