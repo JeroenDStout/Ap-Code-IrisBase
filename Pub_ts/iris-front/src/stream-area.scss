@@ -48,6 +48,7 @@
                 display: flex;
                 flex-direction: column;
                 margin: 0px 0px 0px 2px;
+                flex-flow: column;
 
                 > .top {
                     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ad885f+0,634f32+100 */
@@ -56,7 +57,6 @@
                     background: -webkit-linear-gradient(-45deg, #ad885f 0%,#634f32 100%); /* Chrome10-25,Safari5.1-6 */
                     background: linear-gradient(135deg, #ad885f 0%,#634f32 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
                     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ad885f', endColorstr='#634f32',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
                     min-height: 30px;
 
                     > .title {
@@ -68,7 +68,7 @@
                     }
                 }
 
-                > .stream-message-dnd {
+                > .stream-post-dnd {
                     -webkit-box-shadow: inset 0px 7px 21px 4px rgba(0,23,71,0.23);
                     box-shadow: inset 0px 7px 21px 4px rgba(0,23,71,0.23);
                     flex: 1;
@@ -90,7 +90,20 @@
     }
 }
 
+.stream-widget-dnd::-webkit-scrollbar {
+    background: rgba(255, 255, 255, .05);
+    width: 5px;
+    height: 5px;
+    margin-right: 5px;
+}
+
+.stream-widget-dnd::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, .2);
+}
+
 .stream-widget-dnd {
+    overflow-y: auto;
+
     .widget-frame {
         -moz-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
         -webkit-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05);
@@ -98,6 +111,7 @@
         min-height: 30px;
         position: relative;
         padding: 0.1px;
+        font-size: 12px;
 
         .socket-icon {
             border-radius: 4px;
@@ -120,7 +134,7 @@
             padding: 4px;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .header-element {
@@ -140,6 +154,53 @@
             }
         }
 
+        .line-element {
+            margin: 7px;
+        }
+
+        .list-element {
+            margin: 7px;
+
+            ul {
+                padding: 2px;
+                margin: 0px;
+                border: 1px rgba(0, 0, 0, .1);
+
+                li {
+                    display: inline;
+                    list-style-type: none;
+                    padding: 0px;
+                    margin: 0px;
+
+                    button {
+                        margin-right: 2px;
+                        margin-bottom: 2px;
+                    }
+                }
+            }
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.05);
+            -moz-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .15), inset -1px -1px 1px rgba(0, 0, 0, .15);
+            -webkit-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .15), inset -1px -1px 1px rgba(0, 0, 0, .15);
+            box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .15), inset -1px -1px 1px rgba(0, 0, 0, .15);
+            color: inherit;
+            border: none;
+            padding: 5px;
+            font: inherit;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        button.soft-action {
+            background: rgba(200, 225, 255, 0.1);
+        }
+
+        button.hard-action {
+            background: rgba(255, 200, 255, 0.1);
+        }
+
         .hatch {
             background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(0, 0, 0, .1) 4px, rgba(0, 0, 0, .1) 8px);
             position: absolute;
@@ -152,6 +213,77 @@
 
     .widget-frame.broken {
         filter: blur(1px)
+    }
+}
+
+.stream-post-dnd::-webkit-scrollbar {
+    background: rgba(0, 0, 0, .05);
+    width: 5px;
+    height: 5px;
+    margin-right: 5px;
+}
+
+.stream-post-dnd::-webkit-scrollbar-thumb {
+    background: rgba(200, 255, 255, .1);
+}
+
+.stream-post-dnd {
+    height: 1px;
+    overflow-y: auto;
+
+    > .scrollarea {
+        height: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .smooth-dnd-draggable-wrapper {
+        padding-bottom: 10px;
+        margin-bottom: -10px;
+    }
+
+    .post {
+        -moz-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05), 0px 3px 8px 0px rgba(0,0,0,0.15);
+        -webkit-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05), 0px 3px 8px 0px rgba(0,0,0,0.15);
+        box-shadow: inset 1px 1px 1px rgba(255, 255, 255, .05), inset -1px -1px 1px rgba(0, 0, 0, .05), 0px 3px 8px 0px rgba(0,0,0,0.15);
+        background: rgb(60,70,70);
+        min-height: 30px;
+        margin: 5px;
+        margin-bottom: 0px;
+        padding: 5px;
+        display: block;
+        border-radius: 5px;
+        font-size: 12px;
+        color: rgb(253, 246, 227);
+
+        .time {
+            font-size: 8px;
+            float: right;
+            opacity: .6;
+        }
+
+        .generic-is-ok {
+            font-size: 9px;
+            float: left;
+            margin-right: 4px;
+        }
+
+        .generic-is-ok.ok {
+            color: lightgreen;
+        }
+
+        .generic-is-ok.failed {
+            color: orangered;
+        }
+
+        .re-user-action {
+            font-style: italic;
+            opacity: .6;
+        }
+
+        .react-json-view {
+            font-size: 12px;
+        }
     }
 }
 
