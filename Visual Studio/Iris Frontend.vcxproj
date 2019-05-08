@@ -134,16 +134,14 @@ npm run build</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-res\raw_logo.png">
-      <FileType>Document</FileType>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-res\raw_logo.png"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>4</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-  </ItemGroup>
+    </CustomBuild></ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\Pub_ts\iris-front\public\manifest.json">
       <FileType>Document</FileType>
@@ -156,191 +154,157 @@ copy NUL boop.txt</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\app.scss">
-      <FileType>Document</FileType>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\app.scss"><FileType>Document</FileType>
       <Command>sass "%(Identity)" "%(RelativeDir)\-gen\%(Filename).css"</Command>
       <Outputs>%(RelativeDir)\-gen\%(Filename).css</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>4</MaxProcesses>
       <Message>sass %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\setup.scss">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\setup.scss"><FileType>Document</FileType>
       <Command>sass "%(Identity)" "%(RelativeDir)\-gen\%(Filename).css"</Command>
       <Outputs>%(RelativeDir)\-gen\%(Filename).css</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>4</MaxProcesses>
       <Message>sass %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.scss">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.scss"><FileType>Document</FileType>
       <Command>sass "%(Identity)" "%(RelativeDir)\-gen\%(Filename).css"</Command>
       <Outputs>%(RelativeDir)\-gen\%(Filename).css</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>4</MaxProcesses>
       <Message>sass %(Identity)</Message>
-    </CustomBuild>
-  </ItemGroup>
+    </CustomBuild></ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Layouts Protocol.ts">
-      <FileType>Document</FileType>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Layouts Protocol.ts"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Messages.ts">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Messages.ts"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Shared.ts">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Shared.ts"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol What-ho.ts">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol What-ho.ts"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\app.css">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\-gen\app.css"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>4</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\setup.css">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\-gen\setup.css"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>4</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-gen\stream-area.css">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\-gen\stream-area.css"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>4</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\App.test.tsx">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\App.test.tsx"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\App.tsx">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\App.tsx"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\draggable-common.tsx">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\draggable-common.tsx"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\draggables.tsx">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\draggables.tsx"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\index.tsx">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\index.tsx"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx">
-      <FileType>Document</FileType>
+    </CustomBuild><CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-  </ItemGroup>
+    </CustomBuild></ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\widget-depo.ts">
-      <FileType>Document</FileType>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\widget-depo.ts"><FileType>Document</FileType>
       <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
 copy NUL boop.txt</Command>
       <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
       <BuildInParallel>true</BuildInParallel>
       <MaxProcesses>999</MaxProcesses>
       <Message>Booping %(Identity)</Message>
-    </CustomBuild>
-  </ItemGroup>
+    </CustomBuild></ItemGroup>
   <ItemGroup>
-    <None Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Interface.ts" />
-  </ItemGroup>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Interface.ts"><FileType>Document</FileType>
+      <Command>cd "$(ProjectDir)..\Pub_ts\iris-front\-boop"
+copy NUL boop.txt</Command>
+      <Outputs>$(ProjectDir)..\Pub_ts\iris-front\-boop\boop.txt</Outputs>
+      <BuildInParallel>true</BuildInParallel>
+      <MaxProcesses>999</MaxProcesses>
+      <Message>Booping %(Identity)</Message>
+    </CustomBuild></ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
