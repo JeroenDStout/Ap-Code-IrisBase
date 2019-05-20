@@ -81,8 +81,8 @@
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <PreBuildEvent>
-      <Command>cd ../meta
-../../BlackRoot/meta/create_repo_version.bat "$(ProjectName)"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -103,8 +103,8 @@
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <PreBuildEvent>
-      <Command>cd ../meta
-../../BlackRoot/meta/create_repo_version.bat "$(ProjectName)"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -128,8 +128,8 @@
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <PreBuildEvent>
-      <Command>cd ../meta
-../../BlackRoot/meta/create_repo_version.bat "$(ProjectName)"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -153,8 +153,8 @@
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <PreBuildEvent>
-      <Command>cd ../meta
-../../BlackRoot/meta/create_repo_version.bat "$(ProjectName)"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -183,16 +183,6 @@
     <Text Include="..\Meta\licence_name.txt" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\Meta\generate_meta.txt">
-      <FileType>Document</FileType>
-      <Message>Generating meta</Message>
-      <Command>python "$(SolutionDir)../BlackRoot/Meta/generate_meta.py" "$(ProjectName)" "$(ProjectDir)../Meta" "$(ProjectDir)../-genc"</Command>
-      <Outputs>$(ProjectDir)..\-genc\def_contribute.h</Outputs>
-      <AdditionalInputs>$(ProjectDir)..\meta\contributors.json;$(ProjectDir)..\meta\libraries.json</AdditionalInputs>
-      <BuildInParallel>true</BuildInParallel>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="../Meta/contributors.json" />
     <None Include="../Meta/libraries.json" />
     <None Include="..\Pub_ts\Layouts Protocol.ts" />
@@ -203,7 +193,14 @@
   <ItemGroup>
     <Image Include="icon1.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <BRMetaDef Include="..\..\BlackRoot\Meta\.brmeta" />
+  </ItemGroup>
+  <ItemGroup>
+    <BRVersionDef Include="..\..\BlackRoot\Meta\.brversion" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <Import Project="$(SolutionDir)\..\BlackRoot\Visual Studio\BRShared.targets" />
 </Project>

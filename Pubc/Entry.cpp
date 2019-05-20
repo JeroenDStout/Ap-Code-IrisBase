@@ -32,7 +32,7 @@ int Iris_Main(Toolbox::Util::EnvironmentBootstrap &bootstrap)
     using cout = BlackRoot::Util::Cout;
     
         // Introduce ourselves
-    cout{} << BlackRoot::Repo::VersionRegistry::GetBootString() << std::endl << std::endl;
+    cout{} << BlackRoot::Repo::VersionRegistry::get_boot_string() << std::endl << std::endl;
 
         // Create an environment and start its thread
 	IrisBack::Core::Environment * environment = new IrisBack::Core::Environment();
