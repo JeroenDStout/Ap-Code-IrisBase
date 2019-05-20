@@ -67,7 +67,14 @@
     <CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx" />
     <CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx" />
     <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx" />
-    <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\App.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggable-common.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\draggables.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\index.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\side-panel.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\socketman.tsx" />
+    <CustomBuild Include="..\Pub_ts\iris-front\src\stream-area.tsx" />
     <CustomBuild Include="..\Pub_ts\iris-front\src\*.tsx" />
     <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Messages.ts" />
     <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Shared.ts" />
@@ -118,9 +125,6 @@
     <CustomBuild Include="..\Pub_ts\iris-front\src\loadout-desk.tsx">
       <Filter>typescript</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Widget.ts">
-      <Filter>typescript\ex</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Messages.ts">
       <Filter>typescript\ex</Filter>
     </CustomBuild>
@@ -145,6 +149,7 @@
     <CustomBuild Include="..\Pub_ts\iris-front\src\widget-depo.ts">
       <Filter>typescript</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Interface.ts" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="typescript">
@@ -162,10 +167,5 @@
     <Filter Include="gen-css">
       <UniqueIdentifier>{9092a891-ea61-4578-89a2-986f5e29dc25}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Pub_ts\iris-front\src\-ex-ts\Websocket Protocol Interface.ts">
-      <Filter>typescript\ex</Filter>
-    </None>
   </ItemGroup>
 </Project>
